@@ -1,0 +1,24 @@
+﻿<Window x:Class="SpotifyMixer.PlaylistSelect"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:SpotifyMixer"
+        xmlns:classes="clr-namespace:SpotifyMixer.Classes"
+        mc:Ignorable="d"
+        Title="Spotify playlists" MinHeight="450" MinWidth="300" MaxHeight="450" MaxWidth="300"
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="#0f0100">
+        <ListView x:Name="Playlists"
+                  Height="450" Width="300" Margin="5" Foreground="Aqua"
+                  MouseDoubleClick="ItemClicked" VirtualizingPanel.ScrollUnit="Pixel">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel d:DataContext="{classes:SpotifyPlaylist}">
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Window>

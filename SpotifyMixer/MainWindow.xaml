@@ -1,0 +1,135 @@
+﻿<Window x:Class="SpotifyMixer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SpotifyMixer"
+        xmlns:tracksClasses="clr-namespace:SpotifyMixer.TracksClasses"
+        mc:Ignorable="d"
+        Title="Spotify Mixer" Height="845" MinWidth="1200" Width="1200"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu Background="#0f0100" DockPanel.Dock="Top" Height="25" VerticalAlignment="Top">
+            <MenuItem Foreground="White" Height="25" Header="Playlist">
+                <MenuItem Header="Add playlist" Click="AddPlaylist" />
+                <MenuItem Header="Open playlist" Click="OpenPlaylist" />
+            </MenuItem>
+        </Menu>
+        <Grid Background="#0f0100">
+            <Grid Margin="15" VerticalAlignment="Top">
+                <Button x:Name="SpotifyConnect" Click="SpotifyAuthentication" VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        Style="{DynamicResource MaterialDesignRaisedAccentButton}" Height="35" Width="150"
+                        Background="#00bf33" Content="Connect to Spotify" />
+                <TextBlock x:Name="CurrentSpotifyUser" Foreground="#00bf33" FontSize="24" HorizontalAlignment="Left"
+                           Margin="0 35 0 0" Height="35"
+                           Width="350">
+                    Current Spotify user: None
+                </TextBlock>
+            </Grid>
+            <Grid VerticalAlignment="Top" Margin="0 125 0 0">
+                <Button Click="Pause" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Width="135"
+                        Height="135"
+                        Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Center">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
+                    </Button.Effect>
+                    <materialDesign:PackIcon Kind="Pause" VerticalAlignment="Center" Width="110" Height="110">
+                        <materialDesign:PackIcon.Foreground>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#00bf33" />
+                                <GradientStop Color="#006600" Offset="0.747" />
+                                <GradientStop Color="#009724" Offset="0.807" />
+                            </LinearGradientBrush>
+                        </materialDesign:PackIcon.Foreground>
+                    </materialDesign:PackIcon>
+                </Button>
+
+                <Button Click="PreviousTrack" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                        Margin="400 0 0 0" Width="100"
+                        Height="100" Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Left">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
+                    </Button.Effect>
+                    <materialDesign:PackIcon Kind="SkipPrevious" VerticalAlignment="Center" Width="100" Height="100">
+                        <materialDesign:PackIcon.Foreground>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#00bf33" />
+                                <GradientStop Color="#006600" Offset="0.747" />
+                                <GradientStop Color="#009724" Offset="0.807" />
+                            </LinearGradientBrush>
+                        </materialDesign:PackIcon.Foreground>
+                    </materialDesign:PackIcon>
+                </Button>
+                <Button Click="NextTrack" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                        Margin="0 0 400 0" Width="100"
+                        Height="100" Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Right">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
+                    </Button.Effect>
+                    <materialDesign:PackIcon Kind="SkipNext" VerticalAlignment="Center" Width="100" Height="100">
+                        <materialDesign:PackIcon.Foreground>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#00bf33" />
+                                <GradientStop Color="#006600" Offset="0.747" />
+                                <GradientStop Color="#009724" Offset="0.807" />
+                            </LinearGradientBrush>
+                        </materialDesign:PackIcon.Foreground>
+                    </materialDesign:PackIcon>
+                </Button>
+            </Grid>
+            <Grid Margin="15" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <TextBlock x:Name="CurrentTrackName" HorizontalAlignment="Right" Foreground="Aqua" FontSize="28">Nothing is playing now</TextBlock>
+                <TextBlock x:Name="CurrentTrackArtist" HorizontalAlignment="Right" Foreground="Aquamarine"
+                           FontSize="24" Margin="0 45 0 0"/>
+                <TextBlock x:Name="CurrentTrackAlbum" HorizontalAlignment="Right" Foreground="Cyan" FontSize="24"
+                           Margin="0 75 0 0"/>
+                <TextBlock x:Name="Progress" HorizontalAlignment="Right" Foreground="Aquamarine" FontSize="24"
+                           Margin="0 120 0 0"/>
+            </Grid>
+
+            <TextBox Padding="5 0" x:Name="SearchBar" TextChanged="OnInputSearch" Foreground="LightSteelBlue" VerticalAlignment="Top" FontSize="20" Margin="8 275 8 0" Height="35" MinWidth="1150">
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="#0f0f0f"></Setter>
+                        <Setter Property="CornerRadius" Value="15"/>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+            <Button Background="#0f0f0f" Foreground="#006600" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="24" Width="24" Margin="0 280 13 0" Click="ClearSearch">
+                <materialDesign:PackIcon Kind="Clear" VerticalAlignment="Center" Width="20" Height="20">
+                </materialDesign:PackIcon>
+            </Button>
+            
+            <ListView x:Name="PlaylistListView" d:DataContext="{tracksClasses:Track}" VerticalAlignment="Bottom"
+                      MinHeight="465" Height="465" MaxHeight="700" MinWidth="1150" Margin="16 0 16 0" Foreground="LightSteelBlue"
+                      MouseDoubleClick="ItemClicked" MouseRightButtonUp="AddToQueue" VirtualizingPanel.ScrollUnit="Pixel">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel MinWidth="1100" HorizontalAlignment="Right" Orientation="Horizontal"
+                                    d:DataContext="{tracksClasses:Track}">
+                            <TextBlock Text="{Binding TrackPosition}" MinWidth="50" MaxWidth="50"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding ShortInfo}" Margin="10"
+                                       VerticalAlignment="Center" MinWidth="330" MaxWidth="330" />
+                            <TextBlock Text="{Binding TrackName}" Margin="10"
+                                       VerticalAlignment="Center" MinWidth="235" MaxWidth="235" />
+                            <TextBlock Text="{Binding Album}" Margin="10"
+                                       VerticalAlignment="Center" MinWidth="230" MaxWidth="230" />
+                            <TextBlock Text="{Binding Duration}" Margin="10"
+                                       VerticalAlignment="Center" MinWidth="70" MaxWidth="70" />
+                            <TextBlock Text="{Binding QueuePositionStr}" Margin="10"
+                                       VerticalAlignment="Center" MinWidth="30" MaxWidth="30" />
+                            <TextBlock Text="{Binding Location}" Margin="10" HorizontalAlignment="Right" MinWidth="50"
+                                       Width="50" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </DockPanel>
+</Window>
