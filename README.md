@@ -4,7 +4,8 @@
  На данный момент у Spotify есть лимит на количество треков в одном плейлисте - 10000, поэтому в данной программе можно объединять несколько плейлистов спотифая в один и слушать их вместе.  
  Поддерживаемые аудиоформаты локальных треков: `mp3, flac`
 #### Для пользователей:
-Во вкладке [Releases](https://github.com/FreeeedomDive/SpotifyMixer/releases) скачайте последнюю версию программы и распакуйте в любом удобном месте
+Во вкладке [Releases](https://github.com/FreeeedomDive/SpotifyMixer/releases) скачайте последнюю версию программы и распакуйте в любом удобном месте  
+Для использования программы вам понадобится клиент Spotify (в нем будут воспроизводиться треки спотифая, локальные треки воспроизводятся внутри данной программы)
 #### Для разработчиков:
 1. Зарегистрируйте свое приложение в [Spotify Dashboard](https://developer.spotify.com/dashboard/applications)
 2. В настройках приложения добавьте http://localhost:1234 в Redirect URIs
@@ -15,9 +16,13 @@
 Фреймворк: .NetFramework 4.7.2  
 Необходимые библиотеки (некоторые подключаются как зависимости):
 1. MaterialDesignThemes
-2. NAudio
-3. NAudio.Flac
-4. NLog
-5. SpotifyAPI.Web
-6. SpotifyAPI.Web.Auth
-7. TagLibSharp
+2. MaterialDesignColors (зависимость)
+3. EmbedIO (зависимость)
+4. NAudio
+5. NAudio.Flac
+6. Newtonsoft.Json (зависимость)
+7. NLog
+8. SpotifyAPI.Web
+9. SpotifyAPI.Web.Auth
+10. TagLibSharp
+11. Unosquare.Swan.Lite (зависимость)
