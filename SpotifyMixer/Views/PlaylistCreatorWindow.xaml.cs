@@ -10,7 +10,7 @@ using SpotifyAPI.Web;
 using SpotifyMixer.Core.TracksClasses;
 using File = TagLib.File;
 
-namespace SpotifyMixer
+namespace SpotifyMixer.Views
 {
     public partial class PlaylistCreatorWindow : Window
     {
