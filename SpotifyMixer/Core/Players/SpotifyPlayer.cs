@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SpotifyAPI.Web;
-using SpotifyMixer.Core;
-using SpotifyMixer.Core.Players;
 using SpotifyMixer.Core.TracksClasses;
 
-namespace SpotifyMixer.Players
+namespace SpotifyMixer.Core.Players
 {
     public class SpotifyPlayer : IPlayer
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private SpotifyWebAPI spotify;
         private bool isLoggedIn;
         private Track currentTrack;
@@ -28,11 +28,13 @@ namespace SpotifyMixer.Players
             isLoggedIn = true;
         }
 
-        public async Task<bool> Play(Track track)
+        public bool Finished { get; set; }
+
+        public async Task<bool> Play(Track current)
         {
             if (!isLoggedIn) return false;
-            var error = await spotify.ResumePlaybackAsync(uris: new List<string> {track.TrackPath}, offset: 0);
-            currentTrack = track;
+            var error = await spotify.ResumePlaybackAsync(uris: new List<string> {current.TrackPath}, offset: 0);
+            currentTrack = current;
             if (error.HasError())
             {
                 Utility.ShowErrorMessage(error.Error.Message, "Error!");
@@ -76,14 +78,45 @@ namespace SpotifyMixer.Players
 
         public async Task<bool> GetState()
         {
-            var playback = await spotify.GetPlaybackAsync();
-            return playback.ProgressMs == 0 && !playback.IsPlaying;
+            try
+            {
+                var playback = await spotify.GetPlaybackAsync();
+                if (playback.HasError())
+                {
+                    Logger.Error(playback.Error.Message);
+                    return false;
+                }
+
+                position = playback.ProgressMs;
+                return position == 0 && !playback.IsPlaying;
+            }
+            catch (FormatException exception)
+            {
+                Logger.Error(exception.Message);
+                return false;
+            }
         }
 
         public async Task<int> CurrentPosition()
         {
-            var playback = await spotify.GetPlaybackAsync();
-            return playback.ProgressMs;
+            try
+            {
+                var playback = await spotify.GetPlaybackAsync();
+                if (playback.HasError())
+                {
+                    Logger.Error(playback.Error.Message);
+                }
+                else
+                {
+                    position = playback.ProgressMs;
+                    Finished = position == 0 && !playback.IsPlaying;
+                }
+            }
+            catch (FormatException exception)
+            {
+                Logger.Error(exception.Message);
+            }
+            return position;
         }
     }
 }

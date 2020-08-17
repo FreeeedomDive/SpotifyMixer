@@ -5,7 +5,6 @@ using System.Windows;
 using SpotifyAPI.Web;
 using SpotifyMixer.Core.Players;
 using SpotifyMixer.Core.TracksClasses;
-using SpotifyMixer.Players;
 using Timer = System.Timers.Timer;
 
 namespace SpotifyMixer.Core
@@ -109,16 +108,14 @@ namespace SpotifyMixer.Core
 
             currentPosition = await player.CurrentPosition();
             UpdateCurrentPosition?.Invoke(currentPosition);
-            var state = await player.GetState();
-            if (!paused && started && state)
-            {
-                Logger.Info("Next track in Switcher, auto switch after end");
-                currentPosition = 0;
-                UpdateCurrentPosition?.Invoke(currentPosition);
-                switcherTimer.Enabled = false;
-                switcherTimer = null;
-                NextTrack();
-            }
+            var finished = player.Finished;
+            if (paused || !started || !finished) return;
+            Logger.Info("Next track in Switcher, auto switch after end");
+            currentPosition = 0;
+            UpdateCurrentPosition?.Invoke(currentPosition);
+            switcherTimer.Enabled = false;
+            switcherTimer = null;
+            NextTrack();
         }
 
         public async void PlayTrack(Track track)

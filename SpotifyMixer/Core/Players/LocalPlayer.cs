@@ -10,32 +10,23 @@ namespace SpotifyMixer.Core.Players
         private readonly MediaPlayer mediaPlayer;
         private int position;
         private Track track;
-        private bool finished;
 
         public LocalPlayer()
         {
             mediaPlayer = new MediaPlayer {Volume = 0.05};
         }
 
-        public Task<bool> Play(Track track)
+        public bool Finished { get; set; }
+
+        public Task<bool> Play(Track current)
         {
-            this.track = track;
+            track = current;
             mediaPlayer.Dispatcher.Invoke(() =>
             {
-
-                mediaPlayer.Open(new Uri(track.TrackPath));
+                mediaPlayer.Open(new Uri(current.TrackPath));
                 mediaPlayer.Play();
             });
             return Task.FromResult(true);
-        }
-
-        public Task<bool> GetState()
-        {
-            mediaPlayer.Dispatcher.Invoke(() =>
-            {
-                finished = mediaPlayer.Position.TotalMilliseconds >= track.TotalTime - 1000;
-            });
-            return Task.FromResult(finished);
         }
 
         public void Pause()
@@ -50,7 +41,11 @@ namespace SpotifyMixer.Core.Players
 
         public Task<int> CurrentPosition()
         {
-            mediaPlayer.Dispatcher.Invoke(() => position = (int) mediaPlayer.Position.TotalMilliseconds);
+            mediaPlayer.Dispatcher.Invoke(() =>
+            {
+                Finished = mediaPlayer.Position.TotalMilliseconds >= track.TotalTime - 1000;
+                position = (int) mediaPlayer.Position.TotalMilliseconds;
+            });
             return Task.FromResult(position);
         }
     }

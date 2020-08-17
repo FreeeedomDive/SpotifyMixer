@@ -15,6 +15,20 @@
     <Window.DataContext>
         <viewModel:PlayerWindowViewModel />
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Control" 
+                    Command="{Binding AddPlaylistCommand}" />
+        <KeyBinding Key="O" Modifiers="Control" 
+                    Command="{Binding OpenPlaylistCommand}" />
+        <KeyBinding Key="C" Modifiers="Control" 
+                    Command="{Binding ConnectCommand}" />
+        <KeyBinding Key="Left" Modifiers="Control" 
+                    Command="{Binding PreviousTrackCommand}" />
+        <KeyBinding Key="Right" Modifiers="Control" 
+                    Command="{Binding NextTrackCommand}" />
+        <KeyBinding Key="Space" Modifiers="Control"
+                    Command="{Binding PauseCommand}" />
+    </Window.InputBindings>
     <DockPanel>
         <Menu Background="#0f0100" DockPanel.Dock="Top" Height="25" VerticalAlignment="Top">
             <MenuItem Foreground="White" Height="25" Header="Playlist">
@@ -33,7 +47,8 @@
                            Width="350" Text="{Binding CurrentUserContent}" />
             </Grid>
             <Grid VerticalAlignment="Top" Margin="0 125 0 0">
-                <Button Command="{Binding PauseCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Width="135"
+                <Button Command="{Binding PauseCommand}"
+                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Width="135"
                         Height="135"
                         Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Center">
                     <Button.Effect>
@@ -51,7 +66,8 @@
                     </materialDesign:PackIcon>
                 </Button>
 
-                <Button Command="{Binding PreviousTrackCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                <Button Command="{Binding PreviousTrackCommand}"
+                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
                         Margin="400 0 0 0" Width="100"
                         Height="100" Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Left">
                     <Button.Effect>
@@ -68,8 +84,9 @@
                         </materialDesign:PackIcon.Foreground>
                     </materialDesign:PackIcon>
                 </Button>
-                
-                <Button Command="{Binding NextTrackCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+
+                <Button Command="{Binding NextTrackCommand}"
+                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
                         Margin="0 0 400 0" Width="100"
                         Height="100" Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Right">
                     <Button.Effect>
@@ -91,14 +108,15 @@
                 <TextBlock x:Name="CurrentTrackName" HorizontalAlignment="Right" Foreground="Aqua" FontSize="28"
                            Text="{Binding MusicController.CurrentTrack.TrackName}" />
                 <TextBlock x:Name="CurrentTrackArtist" HorizontalAlignment="Right" Foreground="Aquamarine"
-                           FontSize="24" Margin="0 45 0 0" Text="{Binding MusicController.CurrentTrack.Artist}"/>
+                           FontSize="24" Margin="0 45 0 0" Text="{Binding MusicController.CurrentTrack.Artist}" />
                 <TextBlock x:Name="CurrentTrackAlbum" HorizontalAlignment="Right" Foreground="Cyan" FontSize="24"
-                           Margin="0 75 0 0" Text="{Binding MusicController.CurrentTrack.Album}"/>
+                           Margin="0 75 0 0" Text="{Binding MusicController.CurrentTrack.Album}" />
                 <TextBlock x:Name="Progress" HorizontalAlignment="Right" Foreground="Aquamarine" FontSize="24"
-                           Margin="0 120 0 0" Text="{Binding CurrentTrackPositionString}"/>
+                           Margin="0 120 0 0" Text="{Binding CurrentTrackPositionString}" />
             </Grid>
 
-            <TextBox Padding="5 0" x:Name="SearchBar" Text="{Binding CurrentFilter, UpdateSourceTrigger=PropertyChanged}" Foreground="LightSteelBlue"
+            <TextBox Padding="5 0" x:Name="SearchBar"
+                     Text="{Binding CurrentFilter, UpdateSourceTrigger=PropertyChanged}" Foreground="LightSteelBlue"
                      VerticalAlignment="Top" FontSize="20" Margin="8 275 8 0" Height="35" MinWidth="1150">
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -109,20 +127,22 @@
             </TextBox>
             <Button Background="#0f0f0f" Foreground="#006600"
                     Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right"
-                    VerticalAlignment="Top" Height="24" Width="24" Margin="0 280 13 0" Command="{Binding ClearSearchCommand}">
+                    VerticalAlignment="Top" Height="24" Width="24" Margin="0 280 13 0"
+                    Command="{Binding ClearSearchCommand}">
                 <materialDesign:PackIcon Kind="Clear" VerticalAlignment="Center" Width="20" Height="20" />
             </Button>
 
             <ListView x:Name="PlaylistListView" ItemsSource="{Binding Path=MusicController.Playlist.Tracks }"
-                      VerticalAlignment="Bottom" MinHeight="465" Height="465" MaxHeight="700" MinWidth="1150" Margin="16 0 16 0"
+                      VerticalAlignment="Bottom" MinHeight="465" Height="465" MaxHeight="700" MinWidth="1150"
+                      Margin="16 0 16 0" SelectionMode="Single"
                       Foreground="LightSteelBlue" SelectedItem="{Binding SelectedTrack}"
                       VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="PlaylistListView_OnSelectionChanged">
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
-                        <b:InvokeCommandAction Command="{Binding PlaySelectedTrackCommand}"/>
+                        <b:InvokeCommandAction Command="{Binding PlaySelectedTrackCommand}" />
                     </b:EventTrigger>
                     <b:EventTrigger EventName="MouseRightButtonUp">
-                        <b:InvokeCommandAction Command="{Binding AddToQueueCommand}"/>
+                        <b:InvokeCommandAction Command="{Binding AddToQueueCommand}" />
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
                 <ListView.ItemTemplate>

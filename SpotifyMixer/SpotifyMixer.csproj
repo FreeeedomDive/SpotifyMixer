@@ -122,7 +122,6 @@
     <Compile Include="Core\Players\SpotifyPlayer.cs" />
     <Compile Include="Core\PlaylistController.cs" />
     <Compile Include="Core\SpotifyAuthenticationData.cs" />
-    <Compile Include="Core\SpotifyData.cs" />
     <Compile Include="Core\TracksClasses\Playlist.cs" />
     <Compile Include="Core\TracksClasses\SpotifyPlaylist.cs" />
     <Compile Include="Core\TracksClasses\Track.cs" />

@@ -5,11 +5,12 @@ namespace SpotifyMixer.Core.Players
 {
     public interface IPlayer
     {
-        Task<bool> Play(Track track);
+        bool Finished { get; set; }
+    
+        Task<bool> Play(Track current);
         void Pause();
         void Unpause();
 
-        Task<bool> GetState();
         Task<int> CurrentPosition();
     }
 }
