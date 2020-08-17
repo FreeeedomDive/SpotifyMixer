@@ -161,7 +161,7 @@ namespace SpotifyMixer.Core
 
         private void SetupAutoSwitcherTimer()
         {
-            tokenRefresherTimer = new Timer(1000 * 60 * 1);
+            tokenRefresherTimer = new Timer(1000 * 60 * 55);
             tokenRefresherTimer.Elapsed += RefreshTokenEvent;
             tokenRefresherTimer.AutoReset = true;
             tokenRefresherTimer.Enabled = true;
@@ -190,6 +190,13 @@ namespace SpotifyMixer.Core
             );
             var currentToken = Utility.LoadToken();
             var newToken = await auth.RefreshToken(currentToken.RefreshToken);
+            if (newToken.HasError())
+            {
+                Utility.ShowErrorMessage(
+                    $"Возникла ошибка при повторной авторизации!\nКод ошибки: {newToken.Error}\nИспользование Spotify невозможно",
+                    "Error");
+                return;
+            }
             SpotifyApi = new SpotifyWebAPI
             {
                 AccessToken = newToken.AccessToken,
@@ -200,7 +207,7 @@ namespace SpotifyMixer.Core
             if (user.HasError())
             {
                 Utility.ShowErrorMessage(
-                    $"Возникла ошибка при авторизации!\nКод ошибки: {user.Error.Message}\nИспользование Spotify невозможно",
+                    $"Возникла ошибка при обновлении профиля!\nКод ошибки: {user.Error.Message}\nИспользование Spotify невозможно",
                     "Error");
                 return;
             }
