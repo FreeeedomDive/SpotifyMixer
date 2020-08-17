@@ -3,41 +3,39 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace SpotifyMixer.TracksClasses
+namespace SpotifyMixer.Core.TracksClasses
 {
     [Serializable]
     public class Track: INotifyPropertyChanged
     {
+        #region Fields
+        
         public int Id;
         public bool HasMetaData;
-        public string Artist { get; set; }
-        public string TrackName  { get; set; }
-        public string Album  { get; set; }
         public int TotalTime;
         public bool IsSpotifyTrack;
         public string TrackPath;
+        private int pos;
 
-        private int _pos;
+        #endregion
+
+        #region Properties
+        
+        public string Artist { get; set; }
+        public string TrackName  { get; set; }
+        public string Album  { get; set; }
 
         public int QueuePosition
         {
-            get => _pos;
+            get => pos;
             set
             { 
-                _pos = value;
-                QueuePositionStr = _pos.ToString();
+                pos = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(QueuePositionStr));
             }
         }
-        public string QueuePositionStr
-        {
-            get => _pos == 0 ? "" : $"[{_pos}]";
-            set
-            {
-                _pos = int.Parse(value);
-                NotifyPropertyChanged();
-            }
-        }
+        public string QueuePositionStr => pos == 0 ? "" : $"[{pos}]";
 
         public string Duration => Utility.GetCorrectTime(TotalTime);
 
@@ -50,6 +48,10 @@ namespace SpotifyMixer.TracksClasses
             HasMetaData ? Artist : Path.GetFileNameWithoutExtension(TrackPath);
 
         public string Location => IsSpotifyTrack ? "Spotify" : "Local";
+
+        #endregion
+
+        #region Methods
 
         public override bool Equals(object obj)
         {
@@ -72,6 +74,8 @@ namespace SpotifyMixer.TracksClasses
                 return hashCode;
             }
         }
+        
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")  

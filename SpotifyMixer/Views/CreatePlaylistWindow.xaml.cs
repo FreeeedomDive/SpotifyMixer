@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using SpotifyAPI.Web;
-using SpotifyMixer.Classes;
+using SpotifyMixer.Core;
+using SpotifyMixer.Core.TracksClasses;
 
 namespace SpotifyMixer
 {
     public partial class CreatePlaylistWindow : Window
     {
-        private SpotifyWebAPI spotify;
+        private readonly SpotifyAuthenticationData spotify;
         public string PlaylistName { get; private set; }
         public readonly List<SpotifyPlaylist> Playlists;
         public readonly List<string> LocalFolders;
         
-        public CreatePlaylistWindow(SpotifyWebAPI spotifyWebApi)
+        public CreatePlaylistWindow(SpotifyAuthenticationData spotifyWebApi)
         {
             InitializeComponent();
             spotify = spotifyWebApi;
@@ -32,7 +33,8 @@ namespace SpotifyMixer
 
         private void AddSpotifyPlaylist(object sender, RoutedEventArgs e)
         {
-            var playlistSelectorWindow = new PlaylistSelect(spotify);
+            if (spotify.SpotifyProfile == null) return;
+            var playlistSelectorWindow = new PlaylistSelect(spotify.SpotifyApi);
             var res = playlistSelectorWindow.ShowDialog();
             if (!res.HasValue || !res.Value) return;
             Playlists.Add(playlistSelectorWindow.Playlist);

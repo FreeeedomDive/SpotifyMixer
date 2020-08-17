@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:SpotifyMixer"
-        xmlns:classes="clr-namespace:SpotifyMixer.Classes"
+        xmlns:tracksClasses="clr-namespace:SpotifyMixer.Core.TracksClasses"
         mc:Ignorable="d"
         Title="Spotify playlists" MinHeight="450" MinWidth="300" MaxHeight="450" MaxWidth="300"
         WindowStartupLocation="CenterScreen">
@@ -14,7 +14,7 @@
                   MouseDoubleClick="ItemClicked" VirtualizingPanel.ScrollUnit="Pixel">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel d:DataContext="{classes:SpotifyPlaylist}">
+                    <StackPanel d:DataContext="{tracksClasses:SpotifyPlaylist}">
                         <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" />
                     </StackPanel>
                 </DataTemplate>

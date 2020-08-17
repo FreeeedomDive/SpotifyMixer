@@ -21,12 +21,10 @@ namespace SpotifyMixer
 
         private void SelectFolder(object sender, RoutedEventArgs e)
         {
-            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-            {
-                var result = dialog.ShowDialog();
-                if (result != System.Windows.Forms.DialogResult.OK) return;
-                FolderPath.Text = dialog.SelectedPath;
-            }
+            using var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            if (result != System.Windows.Forms.DialogResult.OK) return;
+            FolderPath.Text = dialog.SelectedPath;
         }
     }
 }

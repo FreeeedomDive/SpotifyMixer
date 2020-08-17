@@ -13,6 +13,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,6 +47,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Windows.Design.Extensibility, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Windows.Design.Interaction, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors.Design, Version=1.0.0.0, Culture=neutral, PublicKeyToken=189c7f39020fabe0">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Design\Microsoft.Xaml.Behaviors.Design.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
@@ -104,37 +115,42 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CreatePlaylistWindow.xaml.cs">
-      <DependentUpon>CreatePlaylistWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LocalFolderSelect.xaml.cs">
-      <DependentUpon>LocalFolderSelect.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PlaylistCreatorWindow.xaml.cs">
-      <DependentUpon>PlaylistCreatorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PlaylistSelect.xaml.cs">
-      <DependentUpon>PlaylistSelect.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SpotifyData.cs" />
-    <Compile Include="TracksClasses\Playlist.cs" />
-    <Compile Include="TracksClasses\SpotifyPlaylist.cs" />
-    <Compile Include="TracksClasses\Track.cs" />
-    <Compile Include="TracksClasses\TrackQueue.cs" />
+    <Compile Include="Core\Command.cs" />
+    <Compile Include="Core\MusicController.cs" />
+    <Compile Include="Core\Players\IPlayer.cs" />
+    <Compile Include="Core\Players\LocalPlayer.cs" />
+    <Compile Include="Core\Players\SpotifyPlayer.cs" />
+    <Compile Include="Core\PlaylistController.cs" />
+    <Compile Include="Core\SpotifyAuthenticationData.cs" />
+    <Compile Include="Core\SpotifyData.cs" />
+    <Compile Include="Core\TracksClasses\Playlist.cs" />
+    <Compile Include="Core\TracksClasses\SpotifyPlaylist.cs" />
+    <Compile Include="Core\TracksClasses\Track.cs" />
+    <Compile Include="Core\TracksClasses\TrackQueue.cs" />
+    <Compile Include="Core\UserToken.cs" />
+    <Compile Include="Core\Utility.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UserToken.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="ViewModels\PlayerWindowViewModel.cs" />
+    <Compile Include="Views\CreatePlaylistWindow.xaml.cs">
+      <DependentUpon>CreatePlaylistWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LocalFolderSelect.xaml.cs">
+      <DependentUpon>LocalFolderSelect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlayerWindowView.xaml.cs">
+      <DependentUpon>PlayerWindowView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaylistCreatorWindow.xaml.cs">
+      <DependentUpon>PlaylistCreatorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PlaylistSelect.xaml.cs">
+      <DependentUpon>PlaylistSelect.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Players\IPlayer.cs" />
-    <Compile Include="Players\LocalPlayer.cs" />
-    <Compile Include="Players\SpotifyPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -156,11 +172,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CreatePlaylistWindow.xaml" />
-    <Page Include="LocalFolderSelect.xaml" />
-    <Page Include="MainWindow.xaml" />
-    <Page Include="PlaylistCreatorWindow.xaml" />
-    <Page Include="PlaylistSelect.xaml" />
+    <Page Include="Views\CreatePlaylistWindow.xaml" />
+    <Page Include="Views\LocalFolderSelect.xaml" />
+    <Page Include="Views\PlayerWindowView.xaml" />
+    <Page Include="Views\PlaylistCreatorWindow.xaml" />
+    <Page Include="Views\PlaylistSelect.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="bonk.png" />

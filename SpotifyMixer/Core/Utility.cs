@@ -1,10 +1,11 @@
-﻿﻿using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
 using Microsoft.Win32;
+using SpotifyMixer.Core.TracksClasses;
 
-namespace SpotifyMixer
+namespace SpotifyMixer.Core
 {
     public static class Utility
     {

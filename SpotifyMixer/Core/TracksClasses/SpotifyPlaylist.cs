@@ -1,4 +1,4 @@
-﻿namespace SpotifyMixer.Classes
+﻿namespace SpotifyMixer.Core.TracksClasses
 {
     public class SpotifyPlaylist
     {
