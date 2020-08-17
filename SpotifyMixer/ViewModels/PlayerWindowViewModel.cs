@@ -78,10 +78,9 @@ namespace SpotifyMixer.ViewModels
             get => currentFilter;
             set
             {
-                currentFilter = value.ToLower().Trim();
+                currentFilter = value.ToLower();
                 OnPropertyChanged();
-                MusicController.Playlist?.Filter(currentFilter);
-                UpdateCurrentTrack(selectedTrack);
+                MusicController.Playlist?.Filter(currentFilter.Trim());
             }
         }
 
