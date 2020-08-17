@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using SpotifyMixer.TracksClasses;
+using SpotifyMixer.Core.TracksClasses;
 
-namespace SpotifyMixer.Players
+namespace SpotifyMixer.Core.Players
 {
     public interface IPlayer
     {
@@ -9,6 +9,7 @@ namespace SpotifyMixer.Players
         void Pause();
         void Unpause();
 
+        Task<bool> GetState();
         Task<int> CurrentPosition();
     }
 }

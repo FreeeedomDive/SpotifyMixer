@@ -7,8 +7,7 @@ using System.Windows;
 using NAudio.Flac;
 using NAudio.Wave;
 using SpotifyAPI.Web;
-using SpotifyMixer.Classes;
-using SpotifyMixer.TracksClasses;
+using SpotifyMixer.Core.TracksClasses;
 using File = TagLib.File;
 
 namespace SpotifyMixer
@@ -16,19 +15,19 @@ namespace SpotifyMixer
     public partial class PlaylistCreatorWindow : Window
     {
         public Playlist Playlist { get; private set; }
-        private string _playlistName;
-        private SpotifyWebAPI _spotifyWebApi;
-        List<SpotifyPlaylist> _playlists;
-        private List<string> _folders;
+        private readonly string playlistName;
+        private readonly SpotifyWebAPI spotifyWebApi;
+        private readonly List<SpotifyPlaylist> playlists;
+        private readonly List<string> folders;
 
         public PlaylistCreatorWindow(SpotifyWebAPI spotifyWebApi, string playlistName, List<SpotifyPlaylist> playlists,
             List<string> folders)
         {
             InitializeComponent();
-            _spotifyWebApi = spotifyWebApi;
-            _playlists = playlists;
-            _folders = folders;
-            _playlistName = playlistName;
+            this.spotifyWebApi = spotifyWebApi;
+            this.playlists = playlists;
+            this.folders = folders;
+            this.playlistName = playlistName;
             StartGenerating();
         }
 
@@ -43,7 +42,7 @@ namespace SpotifyMixer
             var tracks = new List<Track>();
             var tracksFromPlaylists = GetTracksFromPlaylists(tracks);
             var tracksFromFolders = GetTracksFromFolders(tracksFromPlaylists);
-            Playlist = new Playlist(_playlistName, tracksFromFolders);
+            Playlist = new Playlist(playlistName, tracksFromFolders);
             Playlist.Save();
             Dispatcher.Invoke(() => DialogResult = true);
         }
@@ -51,13 +50,13 @@ namespace SpotifyMixer
         private List<Track> GetTracksFromPlaylists(List<Track> tracks, int startId = 1)
         {
             var index = startId;
-            foreach (var playlistId in _playlists.Select(pl => pl.Id))
+            foreach (var playlistId in playlists.Select(pl => pl.Id))
             {
                 var hasNext = true;
                 var tracksInPlaylist = 0;
                 while (hasNext)
                 {
-                    var tracksLoading = _spotifyWebApi.GetPlaylistTracks(playlistId, offset: tracksInPlaylist);
+                    var tracksLoading = spotifyWebApi.GetPlaylistTracks(playlistId, offset: tracksInPlaylist);
                     tracksInPlaylist += tracksLoading.Items.Count;
                     foreach (var current in tracksLoading.Items.Select(track => track.Track))
                     {
@@ -89,7 +88,7 @@ namespace SpotifyMixer
             var index = Math.Max(tracks.Count, 1);
             foreach (
                 var files in
-                _folders
+                folders
                     .Select(folder =>
                         Directory
                             .GetFiles(folder, "*.*", SearchOption.AllDirectories)

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using SpotifyAPI.Web;
-using SpotifyMixer.Classes;
+using SpotifyMixer.Core.TracksClasses;
 
 namespace SpotifyMixer
 {
