@@ -9,13 +9,14 @@ namespace SpotifyMixer
     /// </summary>
     public partial class App
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public App()
         {
             AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
             {
                 var message = $"{eventArgs.Exception.Message}" +
                               $"\n{eventArgs.Exception.StackTrace}";
-                Utility.ShowErrorMessage(message, "Exception");
+                Logger.Error(message);
             };
         }
     }
