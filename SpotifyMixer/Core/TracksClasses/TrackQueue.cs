@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace SpotifyMixer.Core.TracksClasses
 {
     public class TrackQueue
     {
         #region Fields
-        
+
         private readonly Queue<Track> queue;
         private readonly Queue<Track> userQueue;
         private readonly Stack<Track> previousTracks;
@@ -20,7 +18,7 @@ namespace SpotifyMixer.Core.TracksClasses
         #endregion
 
         #region Properties
-        
+
         public Track CurrentTrack { get; set; }
 
         #endregion
@@ -96,6 +94,7 @@ namespace SpotifyMixer.Core.TracksClasses
                 case 0:
                     return CurrentTrack;
             }
+
             var lastTrack = previousTracks.Pop();
             CurrentTrack = lastTrack;
             return lastTrack;
@@ -107,6 +106,5 @@ namespace SpotifyMixer.Core.TracksClasses
         }
 
         #endregion
-        
     }
 }

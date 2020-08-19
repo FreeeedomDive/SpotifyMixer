@@ -56,6 +56,7 @@ namespace SpotifyMixer.Core.Players
                 if (res.Error.Message.Contains("Restriction violated")) return;
                 Utility.ShowErrorMessage(res.Error.Message, "Error");
             }
+
             paused = true;
             var playback = await spotify.GetPlaybackAsync();
             position = playback.ProgressMs;
@@ -116,6 +117,7 @@ namespace SpotifyMixer.Core.Players
             {
                 Logger.Error(exception.Message);
             }
+
             return position;
         }
     }

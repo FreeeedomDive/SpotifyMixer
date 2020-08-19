@@ -1,5 +1,4 @@
-﻿using System;
-using SpotifyMixer.Core.TracksClasses;
+﻿using SpotifyMixer.Core.TracksClasses;
 using SpotifyMixer.Views;
 
 namespace SpotifyMixer.Core
@@ -7,7 +6,7 @@ namespace SpotifyMixer.Core
     public class PlaylistController
     {
         private readonly SpotifyAuthenticationData spotify;
-        
+
         public PlaylistController(SpotifyAuthenticationData spotify)
         {
             this.spotify = spotify;

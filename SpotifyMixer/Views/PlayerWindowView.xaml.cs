@@ -6,7 +6,7 @@ using SpotifyMixer.ViewModels;
 
 namespace SpotifyMixer.Views
 {
-    public partial class PlayerWindowView : Window
+    public partial class PlayerWindowView
     {
         public PlayerWindowView()
         {
@@ -17,8 +17,8 @@ namespace SpotifyMixer.Views
         {
             if (e.AddedItems.Count == 0) return;
             var newSelectedItem = e.AddedItems[0];
-            if(newSelectedItem != null)
-            { 
+            if (newSelectedItem != null)
+            {
                 (sender as ListBox).ScrollIntoView(newSelectedItem);
             }
         }

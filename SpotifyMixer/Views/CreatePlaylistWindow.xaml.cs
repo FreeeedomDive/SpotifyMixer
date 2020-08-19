@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using SpotifyAPI.Web;
 using SpotifyMixer.Core;
 using SpotifyMixer.Core.TracksClasses;
 
-namespace SpotifyMixer
+namespace SpotifyMixer.Views
 {
-    public partial class CreatePlaylistWindow : Window
+    public partial class CreatePlaylistWindow
     {
         private readonly SpotifyAuthenticationData spotify;
         public string PlaylistName { get; private set; }
         public readonly List<SpotifyPlaylist> Playlists;
         public readonly List<string> LocalFolders;
-        
+
         public CreatePlaylistWindow(SpotifyAuthenticationData spotifyWebApi)
         {
             InitializeComponent();

@@ -5,8 +5,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tracksClasses="clr-namespace:SpotifyMixer.Core.TracksClasses"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         mc:Ignorable="d"
         Title="Spotify Mixer" Height="845" MinWidth="1200" Width="1200"
         WindowStartupLocation="CenterScreen"
@@ -16,15 +14,15 @@
         <viewModel:PlayerWindowViewModel />
     </Window.DataContext>
     <Window.InputBindings>
-        <KeyBinding Key="N" Modifiers="Control" 
+        <KeyBinding Key="N" Modifiers="Control"
                     Command="{Binding AddPlaylistCommand}" />
-        <KeyBinding Key="O" Modifiers="Control" 
+        <KeyBinding Key="O" Modifiers="Control"
                     Command="{Binding OpenPlaylistCommand}" />
-        <KeyBinding Key="C" Modifiers="Control" 
+        <KeyBinding Key="C" Modifiers="Control"
                     Command="{Binding ConnectCommand}" />
-        <KeyBinding Key="Left" Modifiers="Control" 
+        <KeyBinding Key="Left" Modifiers="Control"
                     Command="{Binding PreviousTrackCommand}" />
-        <KeyBinding Key="Right" Modifiers="Control" 
+        <KeyBinding Key="Right" Modifiers="Control"
                     Command="{Binding NextTrackCommand}" />
         <KeyBinding Key="S" Modifiers="Control"
                     Command="{Binding PauseCommand}" />

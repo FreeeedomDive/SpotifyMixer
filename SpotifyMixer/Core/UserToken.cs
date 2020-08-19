@@ -1,8 +1,7 @@
-﻿﻿using System;
+﻿using System;
 
 namespace SpotifyMixer
 {
-    
     [Serializable]
     public class UserToken
     {

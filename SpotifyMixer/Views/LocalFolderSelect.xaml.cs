@@ -1,9 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
-namespace SpotifyMixer
+namespace SpotifyMixer.Views
 {
-    public partial class LocalFolderSelect : Window
+    public partial class LocalFolderSelect
     {
         public string Folder { get; private set; }
         

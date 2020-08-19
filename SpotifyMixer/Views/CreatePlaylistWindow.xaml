@@ -1,4 +1,4 @@
-﻿<Window x:Class="SpotifyMixer.CreatePlaylistWindow"
+﻿<Window x:Class="SpotifyMixer.Views.CreatePlaylistWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,18 +9,28 @@
         WindowStartupLocation="CenterScreen">
     <Grid Background="#0f0100">
         <TextBlock Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="28">Name: </TextBlock>
-        <TextBox x:Name="PlaylistNameInput" Foreground="White" Background="#0c0100" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="24"></TextBox>
-        
-        <TextBlock x:Name="FoldersCount" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24 75">Local folders: 0</TextBlock>
-        <Button Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="25" Height="25" Margin="24 70" Click="AddLocalHolder">
-            <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Width="20" Height="20"/>
+        <TextBox x:Name="PlaylistNameInput" Foreground="White" Background="#0c0100" HorizontalAlignment="Right"
+                 VerticalAlignment="Top" Width="120" Margin="24" />
+
+        <TextBlock x:Name="FoldersCount" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Margin="24 75">
+            Local folders: 0
+        </TextBlock>
+        <Button Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right"
+                VerticalAlignment="Top" Width="25" Height="25" Margin="24 70" Click="AddLocalHolder">
+            <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Width="20" Height="20" />
         </Button>
-        
-        <TextBlock x:Name="SpotifyCount" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24 115">Spotify playlists: 0</TextBlock>
-        <Button Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="25" Height="25" Margin="24 110" Click="AddSpotifyPlaylist">
-            <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Width="20" Height="20"/>
+
+        <TextBlock x:Name="SpotifyCount" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Margin="24 115">
+            Spotify playlists: 0
+        </TextBlock>
+        <Button Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right"
+                VerticalAlignment="Top" Width="25" Height="25" Margin="24 110" Click="AddSpotifyPlaylist">
+            <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center" Width="20" Height="20" />
         </Button>
-        
-        <Button Content="Accept" IsDefault="True" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10" Click="CreatePlaylist"></Button>
+
+        <Button Content="Accept" IsDefault="True" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10"
+                Click="CreatePlaylist" />
     </Grid>
 </Window>

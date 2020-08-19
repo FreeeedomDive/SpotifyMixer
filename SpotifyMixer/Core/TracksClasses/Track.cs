@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 namespace SpotifyMixer.Core.TracksClasses
 {
     [Serializable]
-    public class Track: INotifyPropertyChanged
+    public class Track : INotifyPropertyChanged
     {
         #region Fields
-        
+
         public int Id;
         public bool HasMetaData;
         public int TotalTime;
@@ -20,30 +20,31 @@ namespace SpotifyMixer.Core.TracksClasses
         #endregion
 
         #region Properties
-        
+
         public string Artist { get; set; }
-        public string TrackName  { get; set; }
-        public string Album  { get; set; }
+        public string TrackName { get; set; }
+        public string Album { get; set; }
 
         public int QueuePosition
         {
             get => pos;
             set
-            { 
+            {
                 pos = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(QueuePositionStr));
             }
         }
+
         public string QueuePositionStr => pos == 0 ? "" : $"[{pos}]";
 
         public string Duration => Utility.GetCorrectTime(TotalTime);
 
         public int TrackPosition => Id;
-        
+
         public string TrackInfo =>
             HasMetaData ? $"{Artist} - {TrackName} ({Album})" : Path.GetFileNameWithoutExtension(TrackPath);
-        
+
         public string ShortInfo =>
             HasMetaData ? Artist : Path.GetFileNameWithoutExtension(TrackPath);
 
@@ -74,13 +75,14 @@ namespace SpotifyMixer.Core.TracksClasses
                 return hashCode;
             }
         }
-        
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")  
-        {  
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }  
+        }
     }
 }

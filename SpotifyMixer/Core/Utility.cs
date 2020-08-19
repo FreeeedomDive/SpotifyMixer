@@ -10,20 +10,20 @@ namespace SpotifyMixer.Core
     public static class Utility
     {
         private const string TokenFileName = "token";
-        
+
         public static void SaveToken(UserToken token)
         {
-            IFormatter formatter = new BinaryFormatter();  
-            var stream = new FileStream(TokenFileName, FileMode.Create, FileAccess.Write, FileShare.None);  
-            formatter.Serialize(stream, token);  
-            stream.Close();  
+            IFormatter formatter = new BinaryFormatter();
+            var stream = new FileStream(TokenFileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, token);
+            stream.Close();
         }
 
         public static UserToken LoadToken()
         {
-            IFormatter formatter = new BinaryFormatter();  
-            var stream = new FileStream(TokenFileName, FileMode.Open, FileAccess.Read, FileShare.Read);  
-            var token = (UserToken) formatter.Deserialize(stream);  
+            IFormatter formatter = new BinaryFormatter();
+            var stream = new FileStream(TokenFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var token = (UserToken) formatter.Deserialize(stream);
             stream.Close();
             return token;
         }
@@ -32,7 +32,7 @@ namespace SpotifyMixer.Core
         {
             return File.Exists(TokenFileName);
         }
-        
+
         public static void ShowErrorMessage(string message, string header)
         {
             MessageBox.Show(message, header);
@@ -50,7 +50,8 @@ namespace SpotifyMixer.Core
 
         public static string GetCorrectTime(int time)
         {
-            return $"{time / (1000 * 60)}:{GetCorrectSeconds((time / 1000) % 60)}.{GetCorrectMilliseconds(time % 1000)}";
+            return
+                $"{time / (1000 * 60)}:{GetCorrectSeconds((time / 1000) % 60)}.{GetCorrectMilliseconds(time % 1000)}";
         }
 
         private static string GetCorrectSeconds(int seconds)

@@ -1,8 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using System.Windows.Threading;
 using SpotifyAPI.Web;
 using SpotifyMixer.Core;
 using SpotifyMixer.Core.TracksClasses;
@@ -18,7 +16,7 @@ namespace SpotifyMixer.ViewModels
         private string buttonContent;
         private string currentUserContent;
         private string currentFilter;
-        
+
         #endregion
 
         #region Properties
@@ -62,7 +60,7 @@ namespace SpotifyMixer.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         public string CurrentUserContent
         {
             get => currentUserContent;
@@ -104,7 +102,7 @@ namespace SpotifyMixer.ViewModels
         }
 
         #region Methods
-        
+
         private void UpdateSpotifyApi(SpotifyWebAPI spotifyWebApi)
         {
             MusicController.UpdateSpotifyApi(spotifyWebApi);

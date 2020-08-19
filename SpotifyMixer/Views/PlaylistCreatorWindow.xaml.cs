@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows;
 using NAudio.Flac;
 using NAudio.Wave;
 using SpotifyAPI.Web;
@@ -12,7 +11,7 @@ using File = TagLib.File;
 
 namespace SpotifyMixer.Views
 {
-    public partial class PlaylistCreatorWindow : Window
+    public partial class PlaylistCreatorWindow
     {
         public Playlist Playlist { get; private set; }
         private readonly string playlistName;
@@ -116,7 +115,7 @@ namespace SpotifyMixer.Views
                             if (extension.Equals("mp3"))
                             {
                                 var reader = new Mp3FileReader(file);
-                                duration = (int)reader.TotalTime.TotalMilliseconds;
+                                duration = (int) reader.TotalTime.TotalMilliseconds;
                             }
                             else
                             {
@@ -129,6 +128,7 @@ namespace SpotifyMixer.Views
                             continue;
                         }
                     }
+
                     if (duration > 10 * 60 * 1000) continue;
                     var track = new Track
                     {

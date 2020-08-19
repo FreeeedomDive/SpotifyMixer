@@ -10,10 +10,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace SpotifyMixer.Core.TracksClasses
 {
     [Serializable]
-    public class Playlist: INotifyPropertyChanged
+    public class Playlist : INotifyPropertyChanged
     {
         #region Fields
-        
+
         public string Name;
         private List<Track> allTracks;
         private ObservableCollection<Track> tracks;
@@ -21,7 +21,7 @@ namespace SpotifyMixer.Core.TracksClasses
         #endregion
 
         #region Properties
-        
+
         public ObservableCollection<Track> Tracks
         {
             get => tracks;
@@ -42,7 +42,7 @@ namespace SpotifyMixer.Core.TracksClasses
         }
 
         #region Methods
-        
+
         public void Filter(string filter)
         {
             if (filter.Length == 0)
@@ -50,7 +50,7 @@ namespace SpotifyMixer.Core.TracksClasses
                 Tracks = new ObservableCollection<Track>(allTracks);
                 return;
             }
-            
+
             if (filter.Equals("spotify"))
             {
                 Tracks = new ObservableCollection<Track>(allTracks.Where(track => track.IsSpotifyTrack));
@@ -71,8 +71,8 @@ namespace SpotifyMixer.Core.TracksClasses
 
         public void Save()
         {
-            var formatter = new BinaryFormatter();  
-            Stream stream = new FileStream($"{Name}.pls", FileMode.Create, FileAccess.Write, FileShare.None);  
+            var formatter = new BinaryFormatter();
+            Stream stream = new FileStream($"{Name}.pls", FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
         }
@@ -95,10 +95,11 @@ namespace SpotifyMixer.Core.TracksClasses
             stream.Close();
             return obj;
         }
-        
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -15,7 +15,7 @@ namespace SpotifyMixer.Core
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly SpotifyAuthenticationData spotifyApi;
-        
+
         private Timer switcherTimer;
         private int currentPosition;
 
@@ -35,34 +35,34 @@ namespace SpotifyMixer.Core
         #region Properties
 
         public Playlist Playlist
-                {
-                    get => playlist;
-                    set
-                    {
-                        playlist = value;
-                        OnPropertyChanged();
-                    }
-                }
-        
-                public Track CurrentTrack
-                {
-                    get => currentTrack;
-                    set
-                    {
-                        currentTrack = value;
-                        OnPropertyChanged();
-                    }
-                }
-                
+        {
+            get => playlist;
+            set
+            {
+                playlist = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Track CurrentTrack
+        {
+            get => currentTrack;
+            set
+            {
+                currentTrack = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
-        
+
         public MusicController(SpotifyAuthenticationData spotify)
         {
             spotifyApi = spotify;
             spotifyPlayer = new SpotifyPlayer();
             localPlayer = new LocalPlayer();
         }
-        
+
         #region Delegates
 
         public delegate void UpdateCurrentTrackDelegate(Track track);
@@ -74,7 +74,7 @@ namespace SpotifyMixer.Core
         public UpdateCurrentPositionDelegate UpdateCurrentPosition;
 
         #endregion
-        
+
         #region Methods
 
         public void UpdateSpotifyApi(SpotifyWebAPI api)
@@ -225,6 +225,7 @@ namespace SpotifyMixer.Core
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Linq;
 using System.Windows.Input;
 using SpotifyAPI.Web;
 using SpotifyMixer.Core.TracksClasses;
 
-namespace SpotifyMixer
+namespace SpotifyMixer.Views
 {
-    public partial class PlaylistSelect : Window
+    public partial class PlaylistSelect
     {
         public SpotifyPlaylist Playlist { get; private set; }
 
