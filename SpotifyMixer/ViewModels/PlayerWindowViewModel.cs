@@ -93,7 +93,7 @@ namespace SpotifyMixer.ViewModels
                 UpdateProfileData = UpdateData,
                 UpdateSpotifyApi = UpdateSpotifyApi
             };
-            MusicController = new MusicController(SpotifyApi)
+            MusicController = new MusicController
             {
                 UpdateCurrentTrack = UpdateCurrentTrack,
                 UpdateCurrentPosition = UpdateCurrentPosition

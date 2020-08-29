@@ -1,5 +1,5 @@
 ﻿using SpotifyMixer.Core.TracksClasses;
-using SpotifyMixer.Views;
+using SpotifyMixer.Views.Dialogs;
 
 namespace SpotifyMixer.Core
 {
@@ -14,11 +14,11 @@ namespace SpotifyMixer.Core
 
         public Playlist AddPlaylistDialog()
         {
-            var window = new CreatePlaylistWindow(spotify);
+            var window = new CreatePlaylistDialog(spotify);
             var res = window.ShowDialog();
             if (!res.HasValue || !res.Value) return null;
             var name = window.PlaylistName;
-            var creator = new PlaylistCreatorWindow(spotify.SpotifyApi, name, window.Playlists, window.LocalFolders);
+            var creator = new LoadingPlaylistDialog(spotify.SpotifyApi, name, window.Playlists, window.LocalFolders);
             var res2 = creator.ShowDialog();
             if (!res2.HasValue || !res2.Value) return null;
             return creator.Playlist;

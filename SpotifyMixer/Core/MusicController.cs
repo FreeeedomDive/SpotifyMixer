@@ -14,7 +14,6 @@ namespace SpotifyMixer.Core
         #region Fields
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly SpotifyAuthenticationData spotifyApi;
 
         private Timer switcherTimer;
         private int currentPosition;
@@ -56,9 +55,8 @@ namespace SpotifyMixer.Core
 
         #endregion
 
-        public MusicController(SpotifyAuthenticationData spotify)
+        public MusicController()
         {
-            spotifyApi = spotify;
             spotifyPlayer = new SpotifyPlayer();
             localPlayer = new LocalPlayer();
         }
@@ -111,8 +109,6 @@ namespace SpotifyMixer.Core
             var finished = player.Finished;
             if (paused || !started || !finished) return;
             Logger.Info("Next track in Switcher, auto switch after end");
-            currentPosition = 0;
-            UpdateCurrentPosition?.Invoke(currentPosition);
             switcherTimer.Enabled = false;
             switcherTimer = null;
             NextTrack();
@@ -122,12 +118,10 @@ namespace SpotifyMixer.Core
         {
             if (track.IsSpotifyTrack)
             {
-                Application.Current.Dispatcher.Invoke(() => localPlayer.Pause());
+                localPlayer.Pause();
                 var isPlaying = await spotifyPlayer.Play(track);
                 if (!isPlaying)
                 {
-                    Logger.Info("Next track in method PlayTrack");
-                    NextTrack();
                     return;
                 }
             }

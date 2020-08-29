@@ -9,9 +9,9 @@ using SpotifyAPI.Web;
 using SpotifyMixer.Core.TracksClasses;
 using File = TagLib.File;
 
-namespace SpotifyMixer.Views
+namespace SpotifyMixer.Views.Dialogs
 {
-    public partial class PlaylistCreatorWindow
+    public partial class LoadingPlaylistDialog
     {
         public Playlist Playlist { get; private set; }
         private readonly string playlistName;
@@ -19,7 +19,7 @@ namespace SpotifyMixer.Views
         private readonly List<SpotifyPlaylist> playlists;
         private readonly List<string> folders;
 
-        public PlaylistCreatorWindow(SpotifyWebAPI spotifyWebApi, string playlistName, List<SpotifyPlaylist> playlists,
+        public LoadingPlaylistDialog(SpotifyWebAPI spotifyWebApi, string playlistName, List<SpotifyPlaylist> playlists,
             List<string> folders)
         {
             InitializeComponent();

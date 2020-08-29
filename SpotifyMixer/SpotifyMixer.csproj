@@ -133,20 +133,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModels\PlayerWindowViewModel.cs" />
-    <Compile Include="Views\CreatePlaylistWindow.xaml.cs">
-      <DependentUpon>CreatePlaylistWindow.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\CreatePlaylistDialog.xaml.cs">
+      <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LocalFolderSelect.xaml.cs">
-      <DependentUpon>LocalFolderSelect.xaml</DependentUpon>
+    <Compile Include="Views\Dialogs\LocalFolderSelectDialog.xaml.cs">
+      <DependentUpon>LocalFolderSelectDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\LoadingPlaylistDialog.xaml.cs">
+      <DependentUpon>LoadingPlaylistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\SpotifyPlaylistSelectDialog.xaml.cs">
+      <DependentUpon>SpotifyPlaylistSelectDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PlayerWindowView.xaml.cs">
       <DependentUpon>PlayerWindowView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlaylistCreatorWindow.xaml.cs">
-      <DependentUpon>PlaylistCreatorWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PlaylistSelect.xaml.cs">
-      <DependentUpon>PlaylistSelect.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -171,11 +171,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\CreatePlaylistWindow.xaml" />
-    <Page Include="Views\LocalFolderSelect.xaml" />
+    <Page Include="Views\Dialogs\CreatePlaylistDialog.xaml" />
+    <Page Include="Views\Dialogs\LocalFolderSelectDialog.xaml" />
+    <Page Include="Views\Dialogs\LoadingPlaylistDialog.xaml" />
+    <Page Include="Views\Dialogs\SpotifyPlaylistSelectDialog.xaml" />
     <Page Include="Views\PlayerWindowView.xaml" />
-    <Page Include="Views\PlaylistCreatorWindow.xaml" />
-    <Page Include="Views\PlaylistSelect.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="bonk.png" />

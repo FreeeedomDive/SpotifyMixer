@@ -1,12 +1,12 @@
 ﻿using System.Windows;
 
-namespace SpotifyMixer.Views
+namespace SpotifyMixer.Views.Dialogs
 {
-    public partial class LocalFolderSelect
+    public partial class LocalFolderSelectDialog
     {
         public string Folder { get; private set; }
         
-        public LocalFolderSelect()
+        public LocalFolderSelectDialog()
         {
             InitializeComponent();
         }

@@ -1,0 +1,43 @@
+﻿<Window x:Class="SpotifyMixer.Views.Dialogs.SpotifyPlaylistSelectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:tracksClasses="clr-namespace:SpotifyMixer.Core.TracksClasses"
+        mc:Ignorable="d"
+        Title="Spotify playlists" MinHeight="450" MinWidth="300" MaxHeight="450" MaxWidth="300"
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="#0f0100">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="50"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <TextBox x:Name="LinkTextBox" Background="#0f0f0f" Foreground="#006600" Grid.Row="0" Grid.Column="0" Margin="5" Height="40" FontSize="25">
+            <TextBox.ToolTip>Playlist link or URI</TextBox.ToolTip>
+        </TextBox>
+        <Button Grid.Row="0" Grid.Column="1" Margin="5" Background="#0f0100" Foreground="#006600"
+                Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                VerticalAlignment="Top" Height="40" Width="40"
+                Click="AddPlaylistWithLink">
+            <materialDesign:PackIcon Kind="Add" VerticalAlignment="Center" Width="35" Height="35" />
+        </Button>
+        <ListView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="Playlists"
+                  Height="450" Width="300" Margin="5" Foreground="Aqua"
+                  MouseDoubleClick="ItemClicked" VirtualizingPanel.ScrollUnit="Pixel">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel d:DataContext="{tracksClasses:SpotifyPlaylist}">
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Window>
