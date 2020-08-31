@@ -75,7 +75,7 @@ namespace SpotifyMixer.Core
 
         #region Methods
 
-        public void UpdateSpotifyApi(SpotifyWebAPI api)
+        public void UpdateSpotifyApi(SpotifyClient api)
         {
             spotifyPlayer.SetSpotifyApi(api);
         }

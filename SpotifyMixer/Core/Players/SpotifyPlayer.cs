@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using SpotifyAPI.Web;
 using SpotifyMixer.Core.TracksClasses;
 
@@ -9,7 +10,7 @@ namespace SpotifyMixer.Core.Players
     public class SpotifyPlayer : IPlayer
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private SpotifyWebAPI spotify;
+        private SpotifyClient spotify;
         private bool isLoggedIn;
         private Track currentTrack;
         private int position;
@@ -22,7 +23,7 @@ namespace SpotifyMixer.Core.Players
             paused = true;
         }
 
-        public void SetSpotifyApi(SpotifyWebAPI spotifyWebApi)
+        public void SetSpotifyApi(SpotifyClient spotifyWebApi)
         {
             spotify = spotifyWebApi;
             isLoggedIn = true;
@@ -33,11 +34,17 @@ namespace SpotifyMixer.Core.Players
         public async Task<bool> Play(Track current)
         {
             if (!isLoggedIn) return false;
-            var error = await spotify.ResumePlaybackAsync(uris: new List<string> {current.TrackPath}, offset: 0);
-            currentTrack = current;
-            if (error.HasError())
+            var playbackRequest = new PlayerResumePlaybackRequest()
             {
-                Utility.ShowErrorMessage(error.Error.Message, "Error!");
+                Uris = new List<string> { current.TrackPath },
+                OffsetParam = new PlayerResumePlaybackRequest.Offset() { Position = 0 }
+            };
+            var isPlay = await spotify.Player.ResumePlayback(playbackRequest);
+            currentTrack = current;
+
+            if (!isPlay)
+            {
+                Utility.ShowErrorMessage("resume playback error", "Error!");
                 return false;
             }
 
@@ -50,28 +57,31 @@ namespace SpotifyMixer.Core.Players
             if (!isLoggedIn) return;
             if (paused) return;
             paused = true;
-            var res = await spotify.PausePlaybackAsync();
-            if (res.HasError())
+            var isResume = await spotify.Player.PausePlayback();
+            if (!isResume)
             {
-                if (res.Error.Message.Contains("Restriction violated")) return;
-                Utility.ShowErrorMessage(res.Error.Message, "Error");
+                Utility.ShowErrorMessage("pause playback error", "Error");
             }
 
             paused = true;
-            var playback = await spotify.GetPlaybackAsync();
+            var playback = await spotify.Player.GetCurrentPlayback();
             position = playback.ProgressMs;
         }
 
         public async void Unpause()
         {
             if (!isLoggedIn) return;
-            var res = await spotify.ResumePlaybackAsync(
-                uris: new List<string> {currentTrack.TrackPath},
-                offset: 0,
-                positionMs: position);
-            if (res.HasError())
+            var resumeRequest = new PlayerResumePlaybackRequest()
             {
-                Utility.ShowErrorMessage(res.Error.Message, "Error");
+                Uris = new List<string> { currentTrack.TrackPath },
+                PositionMs = position,
+                OffsetParam = new PlayerResumePlaybackRequest.Offset() { Position = 0 }
+            };
+            var isResume = await spotify.Player.ResumePlayback(resumeRequest);
+
+            if (!isResume)
+            {
+                Utility.ShowErrorMessage("resume playback error", "Error");
             }
 
             paused = false;
@@ -81,12 +91,12 @@ namespace SpotifyMixer.Core.Players
         {
             try
             {
-                var playback = await spotify.GetPlaybackAsync();
-                if (playback.HasError())
-                {
-                    Logger.Error(playback.Error.Message);
-                    return false;
-                }
+                var playback = await spotify.Player.GetCurrentPlayback();
+                //if (playback.HasError())
+                //{
+                //    Logger.Error(playback.Error.Message);
+                //    return false;
+                //}
 
                 position = playback.ProgressMs;
                 return position == 0 && !playback.IsPlaying;
@@ -102,16 +112,16 @@ namespace SpotifyMixer.Core.Players
         {
             try
             {
-                var playback = await spotify.GetPlaybackAsync();
-                if (playback.HasError())
-                {
-                    Logger.Error(playback.Error.Message);
-                }
-                else
-                {
+                var playback = await spotify.Player.GetCurrentPlayback();
+                //if (playback.HasError())
+                //{
+                //    Logger.Error(playback.Error.Message);
+                //}
+                //else
+                //{
                     position = playback.ProgressMs;
                     Finished = position == 0 && !playback.IsPlaying;
-                }
+                //}
             }
             catch (FormatException exception)
             {

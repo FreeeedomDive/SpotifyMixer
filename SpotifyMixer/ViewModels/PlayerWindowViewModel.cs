@@ -103,7 +103,7 @@ namespace SpotifyMixer.ViewModels
 
         #region Methods
 
-        private void UpdateSpotifyApi(SpotifyWebAPI spotifyWebApi)
+        private void UpdateSpotifyApi(SpotifyClient spotifyWebApi)
         {
             MusicController.UpdateSpotifyApi(spotifyWebApi);
         }

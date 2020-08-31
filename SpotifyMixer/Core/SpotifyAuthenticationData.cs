@@ -5,9 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Timers;
 using Newtonsoft.Json;
 using SpotifyAPI.Web;
+using SpotifyAPI.Web.Http;
 using SpotifyAPI.Web.Auth;
-using SpotifyAPI.Web.Enums;
-using SpotifyAPI.Web.Models;
+using System;
+using System.Threading.Tasks;
+using EmbedIO;
+using System.Net;
 
 namespace SpotifyMixer.Core
 {
@@ -25,7 +28,7 @@ namespace SpotifyMixer.Core
             }
         }
 
-        public SpotifyWebAPI SpotifyApi
+        public SpotifyClient SpotifyApi
         {
             get => api;
             set
@@ -35,14 +38,16 @@ namespace SpotifyMixer.Core
             }
         }
 
-        public PrivateProfile SpotifyProfile
+        public IUserProfileClient SpotifyProfile
         {
-            get => profile;
+            get => SpotifyApi.UserProfile;
             set
             {
                 profile = value;
                 OnPropertyChanged();
-                UpdateProfileData?.Invoke(profile.DisplayName);
+                var currentProfile = SpotifyApi.UserProfile.Current();
+                currentProfile.Wait();
+                UpdateProfileData?.Invoke(currentProfile.Result.DisplayName);
             }
         }
 
@@ -51,10 +56,11 @@ namespace SpotifyMixer.Core
         #region Fields
 
         private string clientId;
-        private string clientSecret;
+        private string verifier;
 
-        private SpotifyWebAPI api;
-        private PrivateProfile profile;
+        private SpotifyClient api;
+        private IUserProfileClient profile;
+        private PKCETokenResponse tokenResponse;
 
         private bool canConnect;
 
@@ -68,9 +74,13 @@ namespace SpotifyMixer.Core
 
         public UpdateProfileDataDelegate UpdateProfileData;
 
-        public delegate void UpdateSpotifyApiDelegate(SpotifyWebAPI api);
+        public delegate void UpdateSpotifyApiDelegate(SpotifyClient api);
 
         public UpdateSpotifyApiDelegate UpdateSpotifyApi;
+
+        public delegate void UpdateSpotifyAuthCodeDelegete(string code);
+
+        private UpdateSpotifyAuthCodeDelegete UpdateSpotifyAuthCode;
 
         #endregion
 
@@ -86,11 +96,8 @@ namespace SpotifyMixer.Core
             var text = File.ReadAllText("SpotifyApp.json");
             var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(text);
             dict.TryGetValue("client_id", out var clientId);
-            dict.TryGetValue("client_secret", out var clientSecret);
             this.clientId = clientId;
-            this.clientSecret = clientSecret;
-            IsSpotifyAvailable = this.clientId != null && this.clientSecret != null && this.clientId != "" &&
-                                 this.clientSecret != "";
+            IsSpotifyAvailable = this.clientId != null && this.clientId != "";
         }
 
         private bool CheckAppData()
@@ -101,7 +108,7 @@ namespace SpotifyMixer.Core
             return IsSpotifyAvailable;
         }
 
-        public void Connect()
+        public async void Connect()
         {
             if (!CheckAppData())
             {
@@ -117,46 +124,53 @@ namespace SpotifyMixer.Core
                 return;
             }
 
-            var auth = new AuthorizationCodeAuth(
-                clientId,
-                clientSecret,
-                "http://localhost:1234",
-                "http://localhost:1234",
-                Scope.UserModifyPlaybackState | Scope.UserReadPlaybackState
-            );
+            var (verifier, challenge) = PKCEUtil.GenerateCodes();
+            this.verifier = verifier;
 
-            auth.AuthReceived += async (sender, payload) =>
+            var loginRequest = new LoginRequest(
+            new Uri("http://localhost:5000/callback"),
+                    clientId,
+                    LoginRequest.ResponseType.Code)
             {
-                auth.Stop();
-                var token = await auth.ExchangeCode(payload.Code);
-                SpotifyApi = new SpotifyWebAPI
-                {
-                    TokenType = token.TokenType,
-                    AccessToken = token.AccessToken
-                };
-                var user = await SpotifyApi.GetPrivateProfileAsync();
-                if (user.HasError())
-                {
-                    Utility.ShowErrorMessage(
-                        $"Возникла ошибка при авторизации!\nКод ошибки: {user.Error.Message}\nИспользование Spotify невозможно",
-                        "Error");
-                    return;
-                }
-
-                SpotifyProfile = user;
-                UpdateSpotifyApi?.Invoke(SpotifyApi);
-
-                var userToken = new UserToken
-                {
-                    TokenType = token.TokenType,
-                    AccessToken = token.AccessToken,
-                    RefreshToken = token.RefreshToken
-                };
-                Utility.SaveToken(userToken);
-                SetupAutoSwitcherTimer();
+                CodeChallengeMethod = "S256",
+                CodeChallenge = challenge,
+                Scope = new[] { Scopes.UserModifyPlaybackState, Scopes.UserReadPlaybackState, Scopes.AppRemoteControl },
             };
-            auth.Start();
-            auth.OpenBrowser();
+
+            var uri = loginRequest.ToUri();
+
+            BrowserUtil.Open(uri);
+            UpdateSpotifyAuthCode += OnGetAuthCode;
+            var t = new Task(() => StartLocalWebServer(UpdateSpotifyAuthCode));
+            t.Start();
+        }
+
+        private async void OnGetAuthCode(string code)
+        {
+            var initialResponse = await new OAuthClient().RequestToken(
+                new PKCETokenRequest(clientId, code, new Uri("http://localhost:5000/callback"), verifier));
+
+            tokenResponse = initialResponse;
+            SpotifyApi = new SpotifyClient(initialResponse.AccessToken);
+            SpotifyProfile = SpotifyApi.UserProfile;
+        }
+
+        private void StartLocalWebServer(UpdateSpotifyAuthCodeDelegete updateSpotifyAuthCode)
+        {
+            HttpListener listener = new HttpListener();
+            listener.Prefixes.Add("http://localhost:5000/callback/");
+            listener.Start();
+            HttpListenerContext context = listener.GetContext();
+            HttpListenerRequest request = context.Request;
+            updateSpotifyAuthCode(request.RawUrl.Substring(15));
+            HttpListenerResponse response = context.Response;
+            string responseStr = "<html><head><meta charset='utf8'></head><body>Авторизация успешна</body></html>";
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseStr);
+            response.ContentLength64 = buffer.Length;
+            Stream output = response.OutputStream;
+            output.Write(buffer, 0, buffer.Length);
+            output.Close();
+            listener.Stop();
         }
 
         private void SetupAutoSwitcherTimer()
@@ -181,48 +195,18 @@ namespace SpotifyMixer.Core
                 return;
             }
 
-            var auth = new AuthorizationCodeAuth(
-                clientId,
-                clientSecret,
-                "http://localhost:1234",
-                "http://localhost:1234",
-                Scope.UserModifyPlaybackState | Scope.UserReadPlaybackState
-            );
+            var authenticator = new PKCEAuthenticator(clientId, tokenResponse);
+
+            var config = SpotifyClientConfig.CreateDefault()
+              .WithAuthenticator(authenticator);
+            SpotifyApi = new SpotifyClient(config);
+
             var currentToken = Utility.LoadToken();
-            var newToken = await auth.RefreshToken(currentToken.RefreshToken);
-            if (newToken.HasError())
-            {
-                Utility.ShowErrorMessage(
-                    $"Возникла ошибка при повторной авторизации!\nКод ошибки: {newToken.Error}\nИспользование Spotify невозможно",
-                    "Error");
-                return;
-            }
 
-            SpotifyApi = new SpotifyWebAPI
-            {
-                AccessToken = newToken.AccessToken,
-                TokenType = newToken.TokenType
-            };
-
-            var user = await SpotifyApi.GetPrivateProfileAsync();
-            if (user.HasError())
-            {
-                Utility.ShowErrorMessage(
-                    $"Возникла ошибка при обновлении профиля!\nКод ошибки: {user.Error.Message}\nИспользование Spotify невозможно",
-                    "Error");
-                return;
-            }
+            var user = SpotifyApi.UserProfile;
 
             SpotifyProfile = user;
             UpdateSpotifyApi?.Invoke(SpotifyApi);
-
-            var userToken = new UserToken
-            {
-                TokenType = newToken.TokenType,
-                AccessToken = newToken.AccessToken,
-                RefreshToken = currentToken.RefreshToken
-            };
-            Utility.SaveToken(userToken);
         }
 
         #endregion

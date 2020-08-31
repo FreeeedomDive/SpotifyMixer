@@ -10,10 +10,10 @@ namespace SpotifyMixer.Views.Dialogs
 {
     public partial class SpotifyPlaylistSelectDialog
     {
-        private readonly SpotifyWebAPI spotify;
+        private readonly SpotifyClient spotify;
         public SpotifyPlaylist Playlist { get; private set; }
 
-        public SpotifyPlaylistSelectDialog(SpotifyWebAPI spotify)
+        public SpotifyPlaylistSelectDialog(SpotifyClient spotify)
         {
             InitializeComponent();
             this.spotify = spotify;
@@ -22,8 +22,8 @@ namespace SpotifyMixer.Views.Dialogs
 
         private async void SetUserPlaylists()
         {
-            var user = await spotify.GetPrivateProfileAsync();
-            var playlists = (await spotify.GetUserPlaylistsAsync(user.Id)).Items;
+            var user = spotify.UserProfile;
+            var playlists = (await spotify.Playlists.CurrentUsers()).Items;
             Playlists.ItemsSource = playlists.Select(playlist => new SpotifyPlaylist {Id = playlist.Id, Name = playlist.Name});
         }
 
@@ -49,18 +49,14 @@ namespace SpotifyMixer.Views.Dialogs
             {
                 link = text.Substring(uriPrefix.Length);
             }
-            var playlist = await spotify.GetPlaylistAsync(link);
+            var playlist = await spotify.Playlists.Get(link);
             if (playlist.Id == null)
             {
                 Utility.ShowErrorMessage("Bad link or URI", "Error");
                 LinkTextBox.Text = "";
                 return;
             }
-            if (playlist.HasError())
-            {
-                Utility.ShowErrorMessage(playlist.Error.Message, "Error");
-                return;
-            }
+
             Playlist = new SpotifyPlaylist
             {
                 Id = playlist.Id,

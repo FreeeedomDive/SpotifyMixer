@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NAudio.Flac;
 using NAudio.Wave;
 using SpotifyAPI.Web;
@@ -15,11 +16,11 @@ namespace SpotifyMixer.Views.Dialogs
     {
         public Playlist Playlist { get; private set; }
         private readonly string playlistName;
-        private readonly SpotifyWebAPI spotifyWebApi;
+        private readonly SpotifyClient spotifyWebApi;
         private readonly List<SpotifyPlaylist> playlists;
         private readonly List<string> folders;
 
-        public LoadingPlaylistDialog(SpotifyWebAPI spotifyWebApi, string playlistName, List<SpotifyPlaylist> playlists,
+        public LoadingPlaylistDialog(SpotifyClient spotifyWebApi, string playlistName, List<SpotifyPlaylist> playlists,
             List<string> folders)
         {
             InitializeComponent();
@@ -36,45 +37,37 @@ namespace SpotifyMixer.Views.Dialogs
             thread.Start();
         }
 
-        private void GeneratePlaylist()
+        private async void GeneratePlaylist()
         {
             var tracks = new List<Track>();
-            var tracksFromPlaylists = GetTracksFromPlaylists(tracks);
+            var tracksFromPlaylists = await GetTracksFromPlaylists(tracks);
             var tracksFromFolders = GetTracksFromFolders(tracksFromPlaylists);
             Playlist = new Playlist(playlistName, tracksFromFolders);
             Playlist.Save();
             Dispatcher.Invoke(() => DialogResult = true);
         }
 
-        private List<Track> GetTracksFromPlaylists(List<Track> tracks, int startId = 1)
+        private async Task<List<Track>> GetTracksFromPlaylists(List<Track> tracks, int startId = 1)
         {
             var index = startId;
             foreach (var playlistId in playlists.Select(pl => pl.Id))
             {
-                var hasNext = true;
-                var tracksInPlaylist = 0;
-                while (hasNext)
+                var tracksLoading = await spotifyWebApi.Playlists.GetItems(playlistId);
+                foreach (var current in tracksLoading.Items.Select(track => (FullTrack)track.Track))
                 {
-                    var tracksLoading = spotifyWebApi.GetPlaylistTracks(playlistId, offset: tracksInPlaylist);
-                    tracksInPlaylist += tracksLoading.Items.Count;
-                    foreach (var current in tracksLoading.Items.Select(track => track.Track))
+                    if (current.Uri.Contains("local")) continue;
+                    tracks.Add(new Track
                     {
-                        if (current.Uri.Contains("local")) continue;
-                        tracks.Add(new Track
-                        {
-                            Id = index,
-                            HasMetaData = true,
-                            TrackName = current.Name,
-                            Artist = string.Join(", ", current.Artists.Select(artist => artist.Name)),
-                            Album = current.Album.Name,
-                            IsSpotifyTrack = true,
-                            TrackPath = current.Uri,
-                            TotalTime = current.DurationMs
-                        });
-                        index++;
-                    }
-
-                    hasNext = tracksLoading.HasNextPage();
+                        Id = index,
+                        HasMetaData = true,
+                        TrackName = current.Name,
+                        Artist = string.Join(", ", current.Artists.Select(artist => artist.Name)),
+                        Album = current.Album.Name,
+                        IsSpotifyTrack = true,
+                        TrackPath = current.Uri,
+                        TotalTime = current.DurationMs
+                    });
+                    index++;
                 }
             }
 
