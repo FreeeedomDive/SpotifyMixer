@@ -35,39 +35,43 @@
             </MenuItem>
         </Menu>
         <Grid Background="#0f0100">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150" />
+                <RowDefinition Height="150" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="375" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
             <Grid Margin="15" VerticalAlignment="Top">
-                <Button x:Name="SpotifyConnect" Command="{Binding ConnectCommand}" VerticalAlignment="Top"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Command="{Binding ConnectCommand}" VerticalAlignment="Top"
                         HorizontalAlignment="Left"
                         Style="{DynamicResource MaterialDesignRaisedAccentButton}" Height="35" Width="150"
                         Background="#00bf33" Content="{Binding ButtonContent}" />
-                <TextBlock x:Name="CurrentSpotifyUser" Foreground="#00bf33" FontSize="24" HorizontalAlignment="Left"
-                           Margin="0 35 0 0" Height="35"
+                <TextBlock Grid.Row="1" Foreground="#00bf33" FontSize="24" HorizontalAlignment="Left"
+                           Margin="0 5 0 0" Height="35"
                            Width="350" Text="{Binding CurrentUserContent}" />
             </Grid>
-            <Grid VerticalAlignment="Top" Margin="0 125 0 0">
-                <Button Command="{Binding PauseCommand}"
-                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Width="135"
-                        Height="135"
-                        Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Center">
-                    <Button.Effect>
-                        <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
-                    </Button.Effect>
-                    <materialDesign:PackIcon Kind="PlayArrow" VerticalAlignment="Center" Width="110" Height="110">
-                        <materialDesign:PackIcon.Foreground>
-                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox"
-                                                 StartPoint="0.5,0">
-                                <GradientStop Color="#00bf33" />
-                                <GradientStop Color="#006600" Offset="0.747" />
-                                <GradientStop Color="#009724" Offset="0.807" />
-                            </LinearGradientBrush>
-                        </materialDesign:PackIcon.Foreground>
-                    </materialDesign:PackIcon>
-                </Button>
+
+            <Grid VerticalAlignment="Top" Grid.Column="1" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="145" />
+                    <ColumnDefinition Width="110" />
+                </Grid.ColumnDefinitions>
 
                 <Button Command="{Binding PreviousTrackCommand}"
                         Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
-                        Margin="400 0 0 0" Width="100"
-                        Height="100" Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Left">
+                        Grid.Column="0" Width="100" Height="100"
+                        Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Left">
                     <Button.Effect>
                         <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
                     </Button.Effect>
@@ -83,10 +87,29 @@
                     </materialDesign:PackIcon>
                 </Button>
 
+                <Button Command="{Binding PauseCommand}"
+                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Grid.Column="1"
+                        Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Center"
+                        Width="135" Height="135">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
+                    </Button.Effect>
+                    <materialDesign:PackIcon Kind="PlayArrow" VerticalAlignment="Center" Width="110" Height="110">
+                        <materialDesign:PackIcon.Foreground>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#00bf33" />
+                                <GradientStop Color="#006600" Offset="0.747" />
+                                <GradientStop Color="#009724" Offset="0.807" />
+                            </LinearGradientBrush>
+                        </materialDesign:PackIcon.Foreground>
+                    </materialDesign:PackIcon>
+                </Button>
+
                 <Button Command="{Binding NextTrackCommand}"
-                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
-                        Margin="0 0 400 0" Width="100"
-                        Height="100" Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Right">
+                        Style="{StaticResource MaterialDesignFloatingActionAccentButton}" Grid.Column="2"
+                        Background="#000000" BorderBrush="#00bf33" HorizontalAlignment="Right"
+                        Width="100" Height="100">
                     <Button.Effect>
                         <DropShadowEffect Color="#008724" RenderingBias="Quality" BlurRadius="40" Direction="0" />
                     </Button.Effect>
@@ -102,20 +125,35 @@
                     </materialDesign:PackIcon>
                 </Button>
             </Grid>
-            <Grid Margin="15" VerticalAlignment="Top" HorizontalAlignment="Right">
-                <TextBlock x:Name="CurrentTrackName" HorizontalAlignment="Right" Foreground="Aqua" FontSize="28"
+
+            <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Right" Foreground="Aqua" FontSize="28" Grid.Row="0"
                            Text="{Binding MusicController.CurrentTrack.TrackName}" />
-                <TextBlock x:Name="CurrentTrackArtist" HorizontalAlignment="Right" Foreground="Aquamarine"
-                           FontSize="24" Margin="0 45 0 0" Text="{Binding MusicController.CurrentTrack.Artist}" />
-                <TextBlock x:Name="CurrentTrackAlbum" HorizontalAlignment="Right" Foreground="Cyan" FontSize="24"
-                           Margin="0 75 0 0" Text="{Binding MusicController.CurrentTrack.Album}" />
-                <TextBlock x:Name="Progress" HorizontalAlignment="Right" Foreground="Aquamarine" FontSize="24"
-                           Margin="0 120 0 0" Text="{Binding CurrentTrackPositionString}" />
+                <TextBlock HorizontalAlignment="Right" Foreground="Aquamarine" Grid.Row="1"
+                           FontSize="24" Text="{Binding MusicController.CurrentTrack.Artist}" />
+                <TextBlock HorizontalAlignment="Right" Foreground="Cyan" FontSize="24" Grid.Row="2"
+                           Text="{Binding MusicController.CurrentTrack.Album}" />
             </Grid>
 
-            <TextBox Padding="5 0" x:Name="SearchBar"
+            <Grid Grid.Row="1" Grid.Column="2" Margin="15">
+                
+                <ProgressBar Height="40" Grid.Row="0" Minimum="0" Maximum="1000" VerticalAlignment="Center"
+                             Value="{Binding CurrentProgress, Mode=OneWay}"
+                             Background="#0f0100" Foreground="#001f06" BorderBrush="#001f06">
+                </ProgressBar>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Foreground="Aquamarine" FontSize="22" VerticalAlignment="Center"
+                           Text="{Binding CurrentTrackPositionString}" />
+            </Grid>
+
+            <TextBox x:Name="SearchTextBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Padding="5 0"
+                     Margin="16 0 16 0"
                      Text="{Binding CurrentFilter, UpdateSourceTrigger=PropertyChanged}" Foreground="LightSteelBlue"
-                     VerticalAlignment="Top" FontSize="20" Margin="8 275 8 0" Height="35" MinWidth="1150">
+                     VerticalAlignment="Top" FontSize="20" Height="35" MinWidth="1150" PreviewTextInput="TextChanged">
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="Background" Value="#0f0f0f" />
@@ -123,18 +161,73 @@
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <Button Background="#0f0f0f" Foreground="#006600"
+            <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="#0f0f0f" Foreground="#006600"
+                    Margin="0 5 16 5"
                     Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Right"
-                    VerticalAlignment="Top" Height="24" Width="24" Margin="0 280 13 0"
+                    VerticalAlignment="Top" Height="24" Width="24"
                     Command="{Binding ClearSearchCommand}">
                 <materialDesign:PackIcon Kind="Clear" VerticalAlignment="Center" Width="20" Height="20" />
             </Button>
 
-            <ListView x:Name="PlaylistListView" ItemsSource="{Binding Path=MusicController.Playlist.Tracks }"
-                      VerticalAlignment="Bottom" MinHeight="465" Height="465" MaxHeight="700" MinWidth="1150"
+            <DataGrid x:Name="DataGrid" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3"
+                      ItemsSource="{Binding Path=MusicController.Playlist.Tracks }"
+                      AutoGenerateColumns="False" IsReadOnly="True" Background="#0f0100"
                       Margin="16 0 16 0" SelectionMode="Single"
                       Foreground="LightSteelBlue" SelectedItem="{Binding SelectedTrack}"
-                      VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="PlaylistListView_OnSelectionChanged">
+                      VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="PlaylistListView_OnSelectionChanged"
+                      RowHeight="35" GridLinesVisibility="None" HeadersVisibility="None" RowBackground="#0f0100">
+
+                <DataGrid.Resources>
+                    <Style TargetType="ScrollBar">
+                        <Setter Property="Background" Value="#0f0100" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        Value="#001f06" />
+                                <Setter Property="Foreground"
+                                        Value="LightSteelBlue" />
+                                <Setter Property="BorderThickness"
+                                        Value="0" />
+                            </Trigger>
+                            <Trigger Property="IsSelected"
+                                     Value="False">
+                                <Setter Property="Foreground"
+                                        Value="LightSteelBlue" />
+                                <Setter Property="BorderThickness"
+                                        Value="0" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="BorderThickness"
+                                        Value="0" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                    </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="65" Binding="{Binding Path=TrackPosition}" />
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="*" Binding="{Binding Path=ShortInfo}" />
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="*" Binding="{Binding Path=TrackName}" />
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="*" Binding="{Binding Path=Album}" />
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="85" Binding="{Binding Path=Duration}" />
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="45"
+                                        Binding="{Binding Path=QueuePositionStr}" />
+                    <DataGridTextColumn Foreground="LightSteelBlue" Width="80" Binding="{Binding Path=Location}" />
+                </DataGrid.Columns>
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
                         <b:InvokeCommandAction Command="{Binding PlaySelectedTrackCommand}" />
@@ -143,28 +236,7 @@
                         <b:InvokeCommandAction Command="{Binding AddToQueueCommand}" />
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel MinWidth="1100" HorizontalAlignment="Right" Orientation="Horizontal"
-                                    d:DataContext="{tracksClasses:Track}">
-                            <TextBlock Text="{Binding TrackPosition}" MinWidth="50" MaxWidth="50"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <TextBlock Text="{Binding ShortInfo}" Margin="10"
-                                       VerticalAlignment="Center" MinWidth="330" MaxWidth="330" />
-                            <TextBlock Text="{Binding TrackName}" Margin="10"
-                                       VerticalAlignment="Center" MinWidth="235" MaxWidth="235" />
-                            <TextBlock Text="{Binding Album}" Margin="10"
-                                       VerticalAlignment="Center" MinWidth="230" MaxWidth="230" />
-                            <TextBlock Text="{Binding Duration}" Margin="10"
-                                       VerticalAlignment="Center" MinWidth="70" MaxWidth="70" />
-                            <TextBlock Text="{Binding QueuePositionStr}" Margin="10"
-                                       VerticalAlignment="Center" MinWidth="30" MaxWidth="30" />
-                            <TextBlock Text="{Binding Location}" Margin="10" HorizontalAlignment="Right" MinWidth="50"
-                                       Width="50" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            </DataGrid>
         </Grid>
     </DockPanel>
 </Window>

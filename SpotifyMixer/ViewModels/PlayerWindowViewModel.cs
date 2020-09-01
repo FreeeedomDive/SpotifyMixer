@@ -33,13 +33,25 @@ namespace SpotifyMixer.ViewModels
                 currentTrackPosition = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CurrentTrackPositionString));
+                CurrentProgress = currentTrackPosition * 1000 / MusicController?.CurrentTrack?.TotalTime  ?? 0;
             }
         }
 
         public string CurrentTrackPositionString =>
             MusicController.CurrentTrack != null
                 ? $"{Utility.GetCorrectTime(currentTrackPosition)} / {Utility.GetCorrectTime(MusicController.CurrentTrack.TotalTime)}"
-                : "";
+                : "Nothing is playing now";
+
+        private int progress;
+        public int CurrentProgress
+        {
+            get => progress;
+            set
+            {
+                progress = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Track SelectedTrack
         {
