@@ -42,9 +42,6 @@ namespace SpotifyMixer.Core.TracksClasses
 
         public int TrackPosition => Id;
 
-        public string TrackInfo =>
-            HasMetaData ? $"{Artist} - {TrackName} ({Album})" : Path.GetFileNameWithoutExtension(TrackPath);
-
         public string ShortInfo =>
             HasMetaData ? Artist : Path.GetFileNameWithoutExtension(TrackPath);
 

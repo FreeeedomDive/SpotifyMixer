@@ -64,9 +64,15 @@ namespace SpotifyMixer.Core.TracksClasses
             }
 
             Tracks = new ObservableCollection<Track>(allTracks.Where(track =>
-                track.TrackName.ToLower().Contains(filter) ||
-                track.Artist.ToLower().Contains(filter) ||
-                track.Album.ToLower().Contains(filter)));
+            {
+                var info = $"{track.TrackName.ToLower()} {track.Artist.ToLower()} {track.Album.ToLower()}";
+                return filter.Split().All(filterWord => info.Contains(filterWord));
+            }));
+            
+            // Tracks = new ObservableCollection<Track>(allTracks.Where(track =>
+            //     track.TrackName.ToLower().Contains(filter) ||
+            //     track.Artist.ToLower().Contains(filter) ||
+            //     track.Album.ToLower().Contains(filter)));
         }
 
         public void Save()

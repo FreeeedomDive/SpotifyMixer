@@ -15,12 +15,16 @@ namespace SpotifyMixer.Views
 
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
-            var newSelectedItem = e.AddedItems[0];
-            if (newSelectedItem != null)
-            {
-                (sender as ListBox).ScrollIntoView(newSelectedItem);
-            }
+            var selected = DataGrid.SelectedItem;
+            if (selected != null)
+                DataGrid.ScrollIntoView(selected);
+        }
+
+        private void TextChanged(object sender, TextCompositionEventArgs e)
+        {
+            var selected = DataGrid.SelectedItem;
+            if (selected != null)
+                DataGrid.ScrollIntoView(selected);
         }
     }
 }
