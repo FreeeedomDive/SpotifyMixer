@@ -141,12 +141,12 @@
             </Grid>
 
             <Grid Grid.Row="1" Grid.Column="2" Margin="15">
-                
+
                 <ProgressBar Height="40" Grid.Row="0" Minimum="0" Maximum="1000" VerticalAlignment="Center"
                              Value="{Binding CurrentProgress, Mode=OneWay}"
-                             Background="#0f0100" Foreground="#001f06" BorderBrush="#001f06">
-                </ProgressBar>
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Foreground="Aquamarine" FontSize="22" VerticalAlignment="Center"
+                             Background="#0f0100" Foreground="#001f06" BorderBrush="#001f06" />
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Foreground="Aquamarine" FontSize="22"
+                           VerticalAlignment="Center"
                            Text="{Binding CurrentTrackPositionString}" />
             </Grid>
 
@@ -175,13 +175,20 @@
                       Margin="16 0 16 0" SelectionMode="Single"
                       Foreground="LightSteelBlue" SelectedItem="{Binding SelectedTrack}"
                       VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="PlaylistListView_OnSelectionChanged"
-                      RowHeight="35" GridLinesVisibility="None" HeadersVisibility="None" RowBackground="#0f0100">
+                      RowHeight="35" GridLinesVisibility="None" HeadersVisibility="Column" RowBackground="#0f0100">
 
                 <DataGrid.Resources>
                     <Style TargetType="ScrollBar">
                         <Setter Property="Background" Value="#0f0100" />
                     </Style>
                 </DataGrid.Resources>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy link" Command="{Binding ContextMenuCopyLinkCommand}" />
+                        <MenuItem Header="Add to queue" Command="{Binding ContextMenuAddToQueueCommand}" />
+                        <MenuItem Header="Delete from playlist" Command="{Binding ContextMenuDeleteCommand}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Style.Triggers>
@@ -219,21 +226,73 @@
                 </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="65" Binding="{Binding Path=TrackPosition}" />
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="*" Binding="{Binding Path=ShortInfo}" />
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="*" Binding="{Binding Path=TrackName}" />
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="*" Binding="{Binding Path=Album}" />
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="85" Binding="{Binding Path=Duration}" />
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="45"
-                                        Binding="{Binding Path=QueuePositionStr}" />
-                    <DataGridTextColumn Foreground="LightSteelBlue" Width="80" Binding="{Binding Path=Location}" />
+                    <DataGridTextColumn Header="ID" Foreground="LightSteelBlue" Width="65"
+                                        Binding="{Binding Path=Id}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Artist" Foreground="LightSteelBlue" Width="*"
+                                        Binding="{Binding Path=ArtistOrFilename}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Track" Foreground="LightSteelBlue" Width="*"
+                                        Binding="{Binding Path=TrackName}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Album" Foreground="LightSteelBlue" Width="*"
+                                        Binding="{Binding Path=Album}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Duration" Foreground="LightSteelBlue" Width="85"
+                                        Binding="{Binding Path=Duration}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Queue" Foreground="LightSteelBlue" Width="45"
+                                        Binding="{Binding Path=QueuePositionStr}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Location" Foreground="LightSteelBlue" Width="80"
+                                        Binding="{Binding Path=Location}">
+                        <DataGridColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Background" Value="#0f0100" />
+                            </Style>
+                        </DataGridColumn.HeaderStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDoubleClick">
                         <b:InvokeCommandAction Command="{Binding PlaySelectedTrackCommand}" />
-                    </b:EventTrigger>
-                    <b:EventTrigger EventName="MouseRightButtonUp">
-                        <b:InvokeCommandAction Command="{Binding AddToQueueCommand}" />
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
             </DataGrid>

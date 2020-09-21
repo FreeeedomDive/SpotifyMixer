@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using SpotifyAPI.Web;
 using SpotifyMixer.Core;
@@ -33,7 +34,7 @@ namespace SpotifyMixer.ViewModels
                 currentTrackPosition = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CurrentTrackPositionString));
-                CurrentProgress = currentTrackPosition * 1000 / MusicController?.CurrentTrack?.TotalTime  ?? 0;
+                CurrentProgress = currentTrackPosition * 1000 / MusicController?.CurrentTrack?.TotalTime ?? 0;
             }
         }
 
@@ -43,6 +44,7 @@ namespace SpotifyMixer.ViewModels
                 : "Nothing is playing now";
 
         private int progress;
+
         public int CurrentProgress
         {
             get => progress;
@@ -153,7 +155,10 @@ namespace SpotifyMixer.ViewModels
         private ICommand openPlaylistCommand;
 
         private ICommand playSelectedTrackCommand;
-        private ICommand addToQueueCommand;
+
+        private ICommand contextMenuCopyLinkCommand;
+        private ICommand contextMenuAddToQueueCommand;
+        private ICommand contextMenuDeleteCommand;
 
         public ICommand ConnectCommand => connectCommand ??=
             new Command(() => SpotifyApi.Connect(), () => SpotifyApi.IsSpotifyAvailable);
@@ -171,12 +176,6 @@ namespace SpotifyMixer.ViewModels
             new Command(() =>
             {
                 if (SelectedTrack != null) MusicController.PlayTrack(SelectedTrack);
-            });
-
-        public ICommand AddToQueueCommand => addToQueueCommand ??=
-            new Command(() =>
-            {
-                if (SelectedTrack != null) MusicController.AddToQueue(SelectedTrack);
             });
 
         public ICommand AddPlaylistCommand => addPlaylistCommand ??=
@@ -197,6 +196,23 @@ namespace SpotifyMixer.ViewModels
 
         public ICommand ClearSearchCommand => clearSearchCommand ??=
             new Command(() => CurrentFilter = "");
+
+        public ICommand ContextMenuCopyLinkCommand => contextMenuCopyLinkCommand ??=
+            new Command(() => Clipboard.SetText(Utility.UriToLink(SelectedTrack.TrackPath)),
+                () => SelectedTrack != null && SelectedTrack.IsSpotifyTrack);
+
+        public ICommand ContextMenuAddToQueueCommand => contextMenuAddToQueueCommand ??=
+            new Command(() => MusicController.AddToQueue(SelectedTrack),
+                () => SelectedTrack != null);
+
+        public ICommand ContextMenuDeleteCommand => contextMenuDeleteCommand ??=
+            new Command(() =>
+                {
+                    var removed = MusicController.Playlist.RemoveTrack(SelectedTrack);
+                    if (!removed) Utility.ShowErrorMessage("Track is not deleted!", "Error");
+                    SelectedTrack = MusicController.CurrentTrack;
+                },
+                () => SelectedTrack != null);
 
         #endregion
 

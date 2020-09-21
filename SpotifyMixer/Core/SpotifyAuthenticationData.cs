@@ -122,7 +122,7 @@ namespace SpotifyMixer.Core
                 clientSecret,
                 "http://localhost:1234",
                 "http://localhost:1234",
-                Scope.UserModifyPlaybackState | Scope.UserReadPlaybackState
+                Scope.UserModifyPlaybackState | Scope.UserReadPlaybackState | Scope.Streaming | Scope.UserReadEmail | Scope.UserReadPrivate
             );
 
             auth.AuthReceived += async (sender, payload) =>

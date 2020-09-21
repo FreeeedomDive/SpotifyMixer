@@ -5,12 +5,12 @@ using System.Runtime.CompilerServices;
 
 namespace SpotifyMixer.Core.TracksClasses
 {
-    [Serializable]
     public class Track : INotifyPropertyChanged
     {
         #region Fields
 
-        public int Id;
+        private int id;
+        
         public bool HasMetaData;
         public int TotalTime;
         public bool IsSpotifyTrack;
@@ -21,6 +21,15 @@ namespace SpotifyMixer.Core.TracksClasses
 
         #region Properties
 
+        public int Id
+        {
+            get => id;
+            set
+            {
+                id = value;
+                NotifyPropertyChanged();
+            }
+        }
         public string Artist { get; set; }
         public string TrackName { get; set; }
         public string Album { get; set; }
@@ -40,9 +49,7 @@ namespace SpotifyMixer.Core.TracksClasses
 
         public string Duration => Utility.GetCorrectTime(TotalTime);
 
-        public int TrackPosition => Id;
-
-        public string ShortInfo =>
+        public string ArtistOrFilename =>
             HasMetaData ? Artist : Path.GetFileNameWithoutExtension(TrackPath);
 
         public string Location => IsSpotifyTrack ? "Spotify" : "Local";
@@ -55,6 +62,7 @@ namespace SpotifyMixer.Core.TracksClasses
         {
             if (obj == null) return false;
             if (!(obj is Track track)) return false;
+            if (!ReferenceEquals(this, track)) return false;
             return Id == track.Id;
         }
 

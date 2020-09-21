@@ -41,7 +41,9 @@ namespace SpotifyMixer.Core
         public static Playlist GetPlaylistFromFile()
         {
             var openFileDialog = new OpenFileDialog
-                {Filter = "Playlists (*.pls)|*.pls|All files (*.*)|*.*"};
+            {
+                Filter = "Playlists (*.pls)|*.pls|All files (*.*)|*.*"
+            };
             var res = openFileDialog.ShowDialog();
             if (!res.HasValue || !res.Value) return null;
             var fileName = openFileDialog.FileName;
@@ -63,6 +65,11 @@ namespace SpotifyMixer.Core
         {
             if (milliseconds < 10) return $"00{milliseconds}";
             return milliseconds < 100 ? $"0{milliseconds}" : milliseconds.ToString();
+        }
+
+        public static string UriToLink(string uri)
+        {
+            return $"https://open.spotify.com/track/{uri.Substring("spotify:track:".Length)}";
         }
     }
 }

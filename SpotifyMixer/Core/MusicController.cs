@@ -15,14 +15,15 @@ namespace SpotifyMixer.Core
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private Timer switcherTimer;
+        private Timer switcherTimer, enableSwitchTimer;
         private int currentPosition;
 
         private readonly SpotifyPlayer spotifyPlayer;
         private readonly LocalPlayer localPlayer;
 
         private bool started;
-        private bool paused = true;
+        private bool paused;
+        private bool switchedToNext;
 
         private Playlist playlist;
 
@@ -57,6 +58,8 @@ namespace SpotifyMixer.Core
 
         public MusicController()
         {
+            paused = true;
+            switchedToNext = false;
             spotifyPlayer = new SpotifyPlayer();
             localPlayer = new LocalPlayer();
         }
@@ -86,6 +89,15 @@ namespace SpotifyMixer.Core
             queue = new TrackQueue(playlist);
         }
 
+        private void SetupEnableSwitchTimer()
+        {
+            if (enableSwitchTimer != null) enableSwitchTimer.Enabled = false;
+            enableSwitchTimer = new Timer(5000);
+            enableSwitchTimer.Elapsed += EnableSwitcherEvent;
+            enableSwitchTimer.AutoReset = false;
+            enableSwitchTimer.Enabled = true;
+        }
+
         private void SetupAutoSwitcherTimer()
         {
             if (switcherTimer != null) switcherTimer.Enabled = false;
@@ -107,11 +119,18 @@ namespace SpotifyMixer.Core
             currentPosition = await player.CurrentPosition();
             UpdateCurrentPosition?.Invoke(currentPosition);
             var finished = player.Finished;
-            if (paused || !started || !finished) return;
+            if (paused || !started || !finished || switchedToNext) return;
             Logger.Info("Next track in Switcher, auto switch after end");
             switcherTimer.Enabled = false;
             switcherTimer = null;
+            switchedToNext = true;
             NextTrack();
+        }
+
+        private void EnableSwitcherEvent(object source, ElapsedEventArgs e)
+        {
+            switchedToNext = false;
+            enableSwitchTimer.Enabled = false;
         }
 
         public async void PlayTrack(Track track)
@@ -132,7 +151,9 @@ namespace SpotifyMixer.Core
             }
 
             started = true;
+            paused = false;
             CurrentTrack = track;
+            SetupEnableSwitchTimer();
             SetupAutoSwitcherTimer();
             UpdateCurrentTrack?.Invoke(track);
         }

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
 
 namespace SpotifyMixer.Core.TracksClasses
 {
-    [Serializable]
     public class Playlist : INotifyPropertyChanged
     {
         #region Fields
@@ -43,6 +41,20 @@ namespace SpotifyMixer.Core.TracksClasses
 
         #region Methods
 
+        public bool RemoveTrack(Track removable)
+        {
+            var removed = Tracks.Remove(removable);
+            allTracks.Remove(removable);
+            if (!removed) return false;
+            foreach (var track in Tracks.Where(track => track.Id > removable.Id))
+            {
+                track.Id--;
+            }
+            Save();
+            OnPropertyChanged(nameof(Tracks));
+            return true;
+        }
+
         public void Filter(string filter)
         {
             if (filter.Length == 0)
@@ -68,19 +80,13 @@ namespace SpotifyMixer.Core.TracksClasses
                 var info = $"{track.TrackName.ToLower()} {track.Artist.ToLower()} {track.Album.ToLower()}";
                 return filter.Split().All(filterWord => info.Contains(filterWord));
             }));
-            
-            // Tracks = new ObservableCollection<Track>(allTracks.Where(track =>
-            //     track.TrackName.ToLower().Contains(filter) ||
-            //     track.Artist.ToLower().Contains(filter) ||
-            //     track.Album.ToLower().Contains(filter)));
         }
 
         public void Save()
         {
-            var formatter = new BinaryFormatter();
-            Stream stream = new FileStream($"{Name}.pls", FileMode.Create, FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, this);
-            stream.Close();
+            using var writer = File.CreateText($"{Name}.pls");
+            using var jsWriter = new JsonTextWriter(writer) { Formatting = Formatting.Indented };
+            new JsonSerializer().Serialize(jsWriter, allTracks);
         }
 
         public static Playlist LoadPlaylistByName(string name)
@@ -95,11 +101,10 @@ namespace SpotifyMixer.Core.TracksClasses
 
         private static Playlist Deserialize(string fileName)
         {
-            var formatter = new BinaryFormatter();
-            Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            var obj = (Playlist) formatter.Deserialize(stream);
-            stream.Close();
-            return obj;
+            using var reader = File.OpenText(fileName);
+            using var jsonReader = new JsonTextReader(reader);
+            var tracks = new JsonSerializer().Deserialize<List<Track>>(jsonReader);
+            return new Playlist(fileName.Substring(0, fileName.Length - 4), tracks);
         }
 
         #endregion
