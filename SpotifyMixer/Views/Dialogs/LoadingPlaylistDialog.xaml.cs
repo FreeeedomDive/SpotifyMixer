@@ -19,6 +19,8 @@ namespace SpotifyMixer.Views.Dialogs
         private readonly List<SpotifyPlaylist> playlists;
         private readonly List<string> folders;
 
+        private Dictionary<string, Track> tracks;
+
         public LoadingPlaylistDialog(SpotifyWebAPI spotifyWebApi, string playlistName, List<SpotifyPlaylist> playlists,
             List<string> folders)
         {
@@ -38,15 +40,15 @@ namespace SpotifyMixer.Views.Dialogs
 
         private void GeneratePlaylist()
         {
-            var tracks = new List<Track>();
-            var tracksFromPlaylists = GetTracksFromPlaylists(tracks);
-            var tracksFromFolders = GetTracksFromFolders(tracksFromPlaylists);
-            Playlist = new Playlist(playlistName, tracksFromFolders);
+            tracks = new Dictionary<string, Track>();
+            GetTracksFromPlaylists();
+            GetTracksFromFolders();
+            Playlist = new Playlist(playlistName, new List<Track>(tracks.Values));
             Playlist.Save();
             Dispatcher.Invoke(() => DialogResult = true);
         }
 
-        private List<Track> GetTracksFromPlaylists(List<Track> tracks, int startId = 1)
+        private void GetTracksFromPlaylists(int startId = 1)
         {
             var index = startId;
             foreach (var playlistId in playlists.Select(pl => pl.Id))
@@ -59,29 +61,29 @@ namespace SpotifyMixer.Views.Dialogs
                     tracksInPlaylist += tracksLoading.Items.Count;
                     foreach (var current in tracksLoading.Items.Select(track => track.Track))
                     {
-                        if (current.Uri.Contains("local")) continue;
-                        tracks.Add(new Track
-                        {
-                            Id = index,
-                            HasMetaData = true,
-                            TrackName = current.Name,
-                            Artist = string.Join(", ", current.Artists.Select(artist => artist.Name)),
-                            Album = current.Album.Name,
-                            IsSpotifyTrack = true,
-                            TrackPath = current.Uri,
-                            TotalTime = current.DurationMs
-                        });
-                        index++;
+                        var uri = current.Uri;
+                        if (uri.Contains("local")) continue;
+                        if (tracks.ContainsKey(uri)) continue;
+                        tracks.Add(uri,
+                            new Track
+                            {
+                                Id = index++,
+                                HasMetaData = true,
+                                TrackName = current.Name,
+                                Artist = string.Join(", ", current.Artists.Select(artist => artist.Name)),
+                                Album = current.Album.Name,
+                                IsSpotifyTrack = true,
+                                TrackPath = uri,
+                                TotalTime = current.DurationMs
+                            });
                     }
 
                     hasNext = tracksLoading.HasNextPage();
                 }
             }
-
-            return tracks;
         }
 
-        private List<Track> GetTracksFromFolders(List<Track> tracks)
+        private void GetTracksFromFolders()
         {
             var extensions = new List<string> {".mp3", ".flac"};
             var index = Math.Max(tracks.Count, 1);
@@ -130,9 +132,10 @@ namespace SpotifyMixer.Views.Dialogs
                     }
 
                     if (duration > 10 * 60 * 1000) continue;
+                    if (tracks.ContainsKey(file)) continue;
                     var track = new Track
                     {
-                        Id = index,
+                        Id = index++,
                         IsSpotifyTrack = false,
                         HasMetaData = title.Length != 0,
                         TrackName = title,
@@ -141,12 +144,9 @@ namespace SpotifyMixer.Views.Dialogs
                         TrackPath = file,
                         TotalTime = duration
                     };
-                    tracks.Add(track);
-                    index++;
+                    tracks.Add(file, track);
                 }
             }
-
-            return tracks;
         }
     }
 }

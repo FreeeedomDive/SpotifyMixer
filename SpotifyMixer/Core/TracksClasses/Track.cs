@@ -62,8 +62,7 @@ namespace SpotifyMixer.Core.TracksClasses
         {
             if (obj == null) return false;
             if (!(obj is Track track)) return false;
-            if (!ReferenceEquals(this, track)) return false;
-            return Id == track.Id;
+            return TrackPath == track.TrackPath;
         }
 
         public override int GetHashCode()
@@ -71,11 +70,6 @@ namespace SpotifyMixer.Core.TracksClasses
             unchecked
             {
                 var hashCode = Id;
-                hashCode = (hashCode * 397) ^ HasMetaData.GetHashCode();
-                hashCode = (hashCode * 397) ^ (Artist != null ? Artist.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (TrackName != null ? TrackName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Album != null ? Album.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ IsSpotifyTrack.GetHashCode();
                 hashCode = (hashCode * 397) ^ (TrackPath != null ? TrackPath.GetHashCode() : 0);
                 return hashCode;
             }
