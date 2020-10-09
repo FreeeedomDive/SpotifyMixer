@@ -51,13 +51,13 @@ namespace SpotifyMixer.Views.Dialogs
         private void GetTracksFromPlaylists(int startId = 1)
         {
             var index = startId;
-            foreach (var playlistId in playlists.Select(pl => pl.Id))
+            foreach (var playlist in playlists)
             {
                 var hasNext = true;
                 var tracksInPlaylist = 0;
                 while (hasNext)
                 {
-                    var tracksLoading = spotifyWebApi.GetPlaylistTracks(playlistId, offset: tracksInPlaylist);
+                    var tracksLoading = spotifyWebApi.GetPlaylistTracks(playlist.Id, offset: tracksInPlaylist);
                     tracksInPlaylist += tracksLoading.Items.Count;
                     foreach (var current in tracksLoading.Items.Select(track => track.Track))
                     {
@@ -74,7 +74,8 @@ namespace SpotifyMixer.Views.Dialogs
                                 Album = current.Album.Name,
                                 IsSpotifyTrack = true,
                                 TrackPath = uri,
-                                TotalTime = current.DurationMs
+                                TotalTime = current.DurationMs,
+                                Location = playlist.Name
                             });
                     }
 
@@ -142,7 +143,8 @@ namespace SpotifyMixer.Views.Dialogs
                         Artist = artists,
                         Album = album,
                         TrackPath = file,
-                        TotalTime = duration
+                        TotalTime = duration,
+                        Location = file
                     };
                     tracks.Add(file, track);
                 }

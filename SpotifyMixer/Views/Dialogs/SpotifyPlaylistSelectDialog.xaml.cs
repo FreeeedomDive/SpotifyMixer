@@ -52,13 +52,13 @@ namespace SpotifyMixer.Views.Dialogs
             var playlist = await spotify.GetPlaylistAsync(link);
             if (playlist.Id == null)
             {
-                Utility.ShowErrorMessage("Bad link or URI", "Error");
+                Utility.ShowErrorDialog("Bad link or URI", "Error");
                 LinkTextBox.Text = "";
                 return;
             }
             if (playlist.HasError())
             {
-                Utility.ShowErrorMessage(playlist.Error.Message, "Error");
+                Utility.ShowErrorDialog(playlist.Error.Message, "Error");
                 return;
             }
             Playlist = new SpotifyPlaylist

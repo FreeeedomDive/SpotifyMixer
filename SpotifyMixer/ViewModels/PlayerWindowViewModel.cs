@@ -22,9 +22,9 @@ namespace SpotifyMixer.ViewModels
 
         #region Properties
 
-        public SpotifyAuthenticationData SpotifyApi { get; private set; }
-        public MusicController MusicController { get; private set; }
-        public PlaylistController PlaylistController { get; private set; }
+        public SpotifyAuthenticationData SpotifyApi { get; }
+        public MusicController MusicController { get; }
+        public PlaylistController PlaylistController { get; }
 
         public int CurrentTrackPosition
         {
@@ -159,6 +159,7 @@ namespace SpotifyMixer.ViewModels
         private ICommand contextMenuCopyLinkCommand;
         private ICommand contextMenuAddToQueueCommand;
         private ICommand contextMenuDeleteCommand;
+        private ICommand contextMenuShowTrackInfo;
 
         public ICommand ConnectCommand => connectCommand ??=
             new Command(() => SpotifyApi.Connect(), () => SpotifyApi.IsSpotifyAvailable);
@@ -208,10 +209,16 @@ namespace SpotifyMixer.ViewModels
         public ICommand ContextMenuDeleteCommand => contextMenuDeleteCommand ??=
             new Command(() =>
                 {
+                    if (!Utility.ShowConfirmDialog("Do you want to delete this track?", "Delete track"))
+                        return;
                     var removed = MusicController.Playlist.RemoveTrack(SelectedTrack);
-                    if (!removed) Utility.ShowErrorMessage("Track is not deleted!", "Error");
+                    if (!removed) Utility.ShowErrorDialog("Track is not deleted!", "Error");
                     SelectedTrack = MusicController.CurrentTrack;
                 },
+                () => SelectedTrack != null);
+
+        public ICommand ContextMenuShowTrackInfo => contextMenuShowTrackInfo ??=
+            new Command(() => Utility.ShowInfoDialog(SelectedTrack.GetTrackInfo(), "Selected track"),
                 () => SelectedTrack != null);
 
         #endregion

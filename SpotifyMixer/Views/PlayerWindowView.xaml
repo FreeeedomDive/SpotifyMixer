@@ -60,8 +60,7 @@
                            Margin="0 5 0 0" Height="35"
                            Width="350" Text="{Binding CurrentUserContent}" />
             </Grid>
-
-            <Grid VerticalAlignment="Top" Grid.Column="1" Grid.Row="1">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="110" />
                     <ColumnDefinition Width="145" />
@@ -186,6 +185,7 @@
                     <ContextMenu>
                         <MenuItem Header="Copy link" Command="{Binding ContextMenuCopyLinkCommand}" />
                         <MenuItem Header="Add to queue" Command="{Binding ContextMenuAddToQueueCommand}" />
+                        <MenuItem Header="Show information" Command="{Binding ContextMenuShowTrackInfo}" />
                         <MenuItem Header="Delete from playlist" Command="{Binding ContextMenuDeleteCommand}" />
                     </ContextMenu>
                 </DataGrid.ContextMenu>
@@ -281,7 +281,7 @@
                         </DataGridColumn.HeaderStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn Header="Location" Foreground="LightSteelBlue" Width="80"
-                                        Binding="{Binding Path=Location}">
+                                        Binding="{Binding Path=PlatformLocation}">
                         <DataGridColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Foreground" Value="White" />

@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using SpotifyAPI.Web;
@@ -206,7 +209,7 @@ namespace SpotifyMixer.Core
             var prev = queue.GetPreviousTrack();
             if (prev == null)
             {
-                Utility.ShowErrorMessage("No previous track", "Error");
+                Utility.ShowErrorDialog("No previous track", "Error");
                 return;
             }
 
@@ -223,7 +226,7 @@ namespace SpotifyMixer.Core
             var next = queue.GetNextTrack();
             if (next == null)
             {
-                Utility.ShowErrorMessage("No next track", "Error");
+                Utility.ShowErrorDialog("No next track", "Error");
                 return;
             }
 

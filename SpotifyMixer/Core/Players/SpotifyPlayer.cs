@@ -37,7 +37,7 @@ namespace SpotifyMixer.Core.Players
             currentTrack = current;
             if (error.HasError())
             {
-                Utility.ShowErrorMessage(error.Error.Message, "Error!");
+                Utility.ShowErrorDialog(error.Error.Message, "Error!");
                 return false;
             }
 
@@ -54,7 +54,7 @@ namespace SpotifyMixer.Core.Players
             if (res.HasError())
             {
                 if (res.Error.Message.Contains("Restriction violated")) return;
-                Utility.ShowErrorMessage(res.Error.Message, "Error");
+                Utility.ShowErrorDialog(res.Error.Message, "Error");
             }
 
             paused = true;
@@ -71,7 +71,7 @@ namespace SpotifyMixer.Core.Players
                 positionMs: position);
             if (res.HasError())
             {
-                Utility.ShowErrorMessage(res.Error.Message, "Error");
+                Utility.ShowErrorDialog(res.Error.Message, "Error");
             }
 
             paused = false;

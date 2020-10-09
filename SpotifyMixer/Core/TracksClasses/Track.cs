@@ -10,12 +10,14 @@ namespace SpotifyMixer.Core.TracksClasses
         #region Fields
 
         private int id;
-        
+
         public bool HasMetaData;
         public int TotalTime;
         public bool IsSpotifyTrack;
         public string TrackPath;
         private int pos;
+
+        public string Location { get; set; }
 
         #endregion
 
@@ -30,6 +32,7 @@ namespace SpotifyMixer.Core.TracksClasses
                 NotifyPropertyChanged();
             }
         }
+
         public string Artist { get; set; }
         public string TrackName { get; set; }
         public string Album { get; set; }
@@ -52,11 +55,23 @@ namespace SpotifyMixer.Core.TracksClasses
         public string ArtistOrFilename =>
             HasMetaData ? Artist : Path.GetFileNameWithoutExtension(TrackPath);
 
-        public string Location => IsSpotifyTrack ? "Spotify" : "Local";
+        public string PlatformLocation => IsSpotifyTrack ? "Spotify" : "Local";
 
         #endregion
 
         #region Methods
+
+        public string GetTrackInfo()
+        {
+            return HasMetaData
+                ? $"Artist: {Artist}\n" +
+                  $"Name: {TrackName}\n" +
+                  $"Album: {Album}\n" +
+                  $"Duration: {Duration}\n" +
+                  "\nLocation: " +
+                  (IsSpotifyTrack ? $"Playlist \"{Location}\"" : $"Folder \"{Location}\"")
+                : Location;
+        }
 
         public override bool Equals(object obj)
         {

@@ -33,7 +33,18 @@ namespace SpotifyMixer.Core
             return File.Exists(TokenFileName);
         }
 
-        public static void ShowErrorMessage(string message, string header)
+        public static void ShowErrorDialog(string message, string header)
+        {
+            MessageBox.Show(message, header, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public static bool ShowConfirmDialog(string message, string header)
+        {
+            var res = MessageBox.Show(message, header, MessageBoxButton.YesNo);
+            return res == MessageBoxResult.Yes;
+        }
+
+        public static void ShowInfoDialog(string message, string header)
         {
             MessageBox.Show(message, header);
         }

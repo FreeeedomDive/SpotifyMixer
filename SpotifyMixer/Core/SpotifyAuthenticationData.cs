@@ -105,7 +105,7 @@ namespace SpotifyMixer.Core
         {
             if (!CheckAppData())
             {
-                Utility.ShowErrorMessage(
+                Utility.ShowErrorDialog(
                     "Введены неверные данные о приложении Spotify, использование Spotify невозможно", "Error");
                 return;
             }
@@ -137,7 +137,7 @@ namespace SpotifyMixer.Core
                 var user = await SpotifyApi.GetPrivateProfileAsync();
                 if (user.HasError())
                 {
-                    Utility.ShowErrorMessage(
+                    Utility.ShowErrorDialog(
                         $"Возникла ошибка при авторизации!\nКод ошибки: {user.Error.Message}\nИспользование Spotify невозможно",
                         "Error");
                     return;
@@ -176,7 +176,7 @@ namespace SpotifyMixer.Core
         {
             if (!CheckAppData())
             {
-                Utility.ShowErrorMessage(
+                Utility.ShowErrorDialog(
                     "Введены неверные данные о приложении Spotify, использование Spotify невозможно", "Error");
                 return;
             }
@@ -192,7 +192,7 @@ namespace SpotifyMixer.Core
             var newToken = await auth.RefreshToken(currentToken.RefreshToken);
             if (newToken.HasError())
             {
-                Utility.ShowErrorMessage(
+                Utility.ShowErrorDialog(
                     $"Возникла ошибка при повторной авторизации!\nКод ошибки: {newToken.Error}\nИспользование Spotify невозможно",
                     "Error");
                 return;
@@ -207,7 +207,7 @@ namespace SpotifyMixer.Core
             var user = await SpotifyApi.GetPrivateProfileAsync();
             if (user.HasError())
             {
-                Utility.ShowErrorMessage(
+                Utility.ShowErrorDialog(
                     $"Возникла ошибка при обновлении профиля!\nКод ошибки: {user.Error.Message}\nИспользование Spotify невозможно",
                     "Error");
                 return;
